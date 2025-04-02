@@ -1,4 +1,4 @@
-$path = "src/;lib/hamcrest-core-1.3.jar;lib/junit-4.13.2.jar"
+$path = "src/;lib/hamcrest-core-1.3.jar;lib/junit-4.13.2.jar;lib/mysql-connector-java-5.1.40-bin.jar"
 
 $outputPath = "./classes/"
 
