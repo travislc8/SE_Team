@@ -13,12 +13,17 @@ public class PieceLocation {
      * @param x      the x position the piece is at
      * @param y      the y position the piece is at
      * @param player the player type that owns the piece
-     * @throws IndexOutOfBoundsException when a position argument is < 0 or > 8
      */
-    PieceLocation(int x, int y, PlayerType player) {
+    public PieceLocation(int x, int y, PlayerType player) {
         setxPos(x);
         setyPos(y);
         setPlayer(player);
+    }
+
+    public PieceLocation() {
+        setxPos(0);
+        setyPos(0);
+        setPlayer(PlayerType.WHITE);
     }
 
     public PlayerType getPlayer() {
@@ -35,16 +40,8 @@ public class PieceLocation {
 
     /**
      * @param xPos the y position of the piece
-     * @throws IndexOutOfBoundsException when the position argument is < 0 or > 8
      */
     public void setxPos(int xPos) {
-        if (xPos > 8) {
-            throw new IndexOutOfBoundsException("PieceLocation x position cannot be greater than 8");
-        }
-
-        if (xPos < 0) {
-            throw new IndexOutOfBoundsException("PieceLocation x position cannot be less than 0");
-        }
         this.xPos = xPos;
     }
 
@@ -54,17 +51,28 @@ public class PieceLocation {
 
     /**
      * @param yPos the y position of the piece
-     * @throws IndexOutOfBoundsException when the position argument is < 0 or > 8
      */
     public void setyPos(int yPos) {
-        if (yPos > 8) {
-            throw new IndexOutOfBoundsException("PieceLocation y position cannot be greater than 8");
-        }
-
-        if (yPos < 0) {
-            throw new IndexOutOfBoundsException("PieceLocation y position cannot be less than 0");
-        }
         this.yPos = yPos;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        boolean check;
+        if (object instanceof PieceLocation location) {
+            if (location.getxPos() != this.getxPos()) {
+                check = false;
+            } else if (location.getyPos() != this.getyPos()) {
+                check = false;
+            } else if (location.getPlayer() != this.getPlayer()) {
+                check = false;
+            } else {
+                check = true;
+            }
+        } else {
+            check = false;
+        }
+        return check;
     }
 
 }

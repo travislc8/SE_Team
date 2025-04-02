@@ -5,4 +5,5 @@
  * 
  */
 module Shogi {
+	requires junit;
 }
