@@ -58,6 +58,10 @@ public class PieceLocation {
 
     @Override
     public boolean equals(Object object) {
+        if (this == object)
+            return true;
+        if (object == null)
+            return false;
         boolean check;
         if (object instanceof PieceLocation location) {
             if (location.getxPos() != this.getxPos()) {
@@ -73,6 +77,11 @@ public class PieceLocation {
             check = false;
         }
         return check;
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
     }
 
 }

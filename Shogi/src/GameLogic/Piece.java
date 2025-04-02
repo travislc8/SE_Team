@@ -4,23 +4,35 @@ import java.util.ArrayList;
 
 public class Piece {
     boolean promoted;
+    boolean onBoard;
     PlayerType player;
     PieceType pieceType;
     PieceLocation location;
     ArrayList<PieceLocation> availableMoves;
 
-    Piece(PlayerType player, PieceType piece, PieceLocation location) {
+    public Piece(PlayerType player, PieceType piece, PieceLocation location) {
         this.player = player;
         this.pieceType = piece;
         this.location = location;
         promoted = false;
+        onBoard = true;
+        availableMoves = new ArrayList<>();
     }
 
-    Piece(PlayerType player, PieceType piece, int x, int y) {
+    public Piece(PlayerType player, PieceType piece, int x, int y) {
         this.player = player;
         this.pieceType = piece;
         this.location = new PieceLocation(x, y, player);
+        onBoard = true;
         promoted = false;
+    }
+
+    public boolean isOnBoard() {
+        return onBoard;
+    }
+
+    public void setOnBoard(boolean onBoard) {
+        this.onBoard = onBoard;
     }
 
     public boolean isPromoted() {

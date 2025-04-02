@@ -8,6 +8,7 @@ import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({ ShogiTest.GameLogic.PieceLocationTest.class,
-        ShogiTest.GameLogic.PawnTest.class })
+        ShogiTest.GameLogic.PawnTest.class,
+        PieceLogicTest.class })
 public final class AllTestsSuite {
 }
