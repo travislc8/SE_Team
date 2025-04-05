@@ -47,4 +47,12 @@ public class GameData {
         }
     }
 
+    public ArrayList<Piece> getOtherPlayerPieces(PlayerType playerType) {
+        if (playerType != player1Type) {
+            return player1Pieces;
+        } else {
+            return player1Pieces;
+        }
+    }
+
 }

@@ -8,7 +8,16 @@ import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({ ShogiTest.GameLogic.PieceLocationTest.class,
-        ShogiTest.GameLogic.PawnTest.class,
-        PieceLogicTest.class })
+        PieceLocationTest.class,
+        PieceLogicTest.class,
+        KingLogicTest.class,
+        GoldGeneralLogicTest.class,
+        SilverGeneralLogicTest.class,
+        KnightLogicTest.class,
+        LanceLogicTest.class,
+        BishopLogicTest.class,
+        RookLogicTest.class,
+        PawnLogicTest.class
+})
 public final class AllTestsSuite {
 }

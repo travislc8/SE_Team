@@ -11,7 +11,7 @@ public final class PieceLogic {
         } else if (location.getyPos() < 0 || location.getyPos() > 8) {
             valid = false;
         } else {
-            for (Piece piece : gameData.getPlayer1Pieces()) {
+            for (Piece piece : gameData.getPlayerPieces(location.getPlayer())) {
                 if (location.equals(piece.getLocation())) {
                     valid = false;
                     break;

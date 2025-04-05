@@ -13,7 +13,7 @@ import GameLogic.PieceLocation;
 import GameLogic.PieceType;
 import GameLogic.PlayerType;
 
-public class PawnTest {
+public class PawnLogicTest {
 
     @Test
     public void SimpleWhiteMoveTest() {
