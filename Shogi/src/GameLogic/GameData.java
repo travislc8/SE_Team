@@ -10,7 +10,7 @@ public class GameData {
 
     public GameData() {
         player1Type = PlayerType.BLACK;
-        player1Type = PlayerType.WHITE;
+        player2Type = PlayerType.WHITE;
         player1Pieces = new ArrayList<>();
         player2Pieces = new ArrayList<>();
     }
@@ -43,13 +43,13 @@ public class GameData {
         if (playerType == player1Type) {
             return player1Pieces;
         } else {
-            return player1Pieces;
+            return player2Pieces;
         }
     }
 
     public ArrayList<Piece> getOtherPlayerPieces(PlayerType playerType) {
         if (playerType != player1Type) {
-            return player1Pieces;
+            return player2Pieces;
         } else {
             return player1Pieces;
         }
