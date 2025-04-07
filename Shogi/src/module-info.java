@@ -9,4 +9,5 @@ module Shogi {
     requires ocsf;
     requires mysql.connector.java;
     requires java.sql;
+	requires java.desktop;
 }
