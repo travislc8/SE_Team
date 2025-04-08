@@ -19,8 +19,8 @@ public class GamePanel extends JPanel {
 	private JLabel[] blackInventory;
 	private ArrayList<Piece> objectBlackInventory;
 	
-	private static String BOARD_COLOR = "#A1662F";
-	private static String VALID_MOVE_COLOR = "#66EE66";
+	static String BOARD_COLOR = "#A1662F";
+	static String VALID_MOVE_COLOR = "#66EE66";
 	
 
 	private JPanel boardPanel; //Panel that will contain the board
@@ -246,11 +246,24 @@ public class GamePanel extends JPanel {
 		
 	}
 	
+	public void clearEntireBoard() {
+		clearValidMoves();
+		clearPieces();
+	}
+	
 	public void clearValidMoves() {
 		for (int row = 0; row < 9; row++) {
 			for (int col = 0; col < 9; col++) { 
 				boardGrid[col][row].setText("");
 				boardGrid[col][row].setBackground(Color.decode(BOARD_COLOR));
+			}
+		}
+	}
+	
+	public void clearPieces() {
+		for (int row = 0; row < 9; row++) {
+			for (int col = 0; col < 9; col++) { 
+				boardGrid[col][row].setIcon(null);
 			}
 		}
 	}
