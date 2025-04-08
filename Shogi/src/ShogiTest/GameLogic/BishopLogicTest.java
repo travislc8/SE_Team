@@ -59,7 +59,7 @@ public class BishopLogicTest {
         assertTrue("x=2,y=8", list.contains(new PieceLocation(2, 8, PlayerType.WHITE)));
 
         // conflict
-        data.getPlayer1Pieces().add(new Piece(PlayerType.WHITE, PieceType.PAWN, 2, 2));
+        data.getPlayerPieces(piece.getPlayer()).add(new Piece(PlayerType.WHITE, PieceType.PAWN, 2, 2));
         list = BishopLogic.calculateMoves(piece, data);
         message = "List size = " + list.size();
         assertTrue(message, list.size() == 11);
@@ -135,7 +135,7 @@ public class BishopLogicTest {
         assertTrue("x=2,y=8", list.contains(new PieceLocation(2, 8, PlayerType.BLACK)));
 
         // conflict
-        data.getPlayer1Pieces().add(new Piece(PlayerType.BLACK, PieceType.PAWN, 2, 2));
+        data.getPlayerPieces(piece.getPlayer()).add(new Piece(PlayerType.BLACK, PieceType.PAWN, 2, 2));
         list = BishopLogic.calculateMoves(piece, data);
         message = "List size = " + list.size();
         assertTrue(message, list.size() == 11);
@@ -169,10 +169,10 @@ public class BishopLogicTest {
     @Test
     public void PieceConflictTest() {
         GameData data = new GameData();
-        Piece piece = new Piece(PlayerType.WHITE, PieceType.BISHOP, 0, 0);
+        Piece piece = new Piece(PlayerType.BLACK, PieceType.BISHOP, 0, 0);
         var play1list = new ArrayList<Piece>();
         play1list.add(piece);
-        play1list.add(new Piece(PlayerType.WHITE, PieceType.ROOK, 1, 1));
+        play1list.add(new Piece(PlayerType.BLACK, PieceType.ROOK, 1, 1));
         data.setPlayer1Pieces(play1list);
 
         var list = BishopLogic.calculateMoves(piece, data);

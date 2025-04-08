@@ -34,7 +34,7 @@ public class KnightLogicTest {
         assertTrue("x=6,y=7", list.contains(new PieceLocation(6, 7, PlayerType.WHITE)));
 
         // conflict
-        data.getPlayer1Pieces().add(new Piece(PlayerType.WHITE, PieceType.PAWN, 4, 7));
+        data.getPlayerPieces(piece.getPlayer()).add(new Piece(PlayerType.WHITE, PieceType.PAWN, 4, 7));
         list = KnightLogic.calculateMoves(piece, data);
         message = "List size = " + list.size();
         assertTrue(message, list.size() == 1);
@@ -64,7 +64,7 @@ public class KnightLogicTest {
         assertTrue("x=6,y=3", list.contains(new PieceLocation(6, 3, PlayerType.BLACK)));
 
         // conflict
-        data.getPlayer1Pieces().add(new Piece(PlayerType.BLACK, PieceType.PAWN, 4, 3));
+        data.getPlayerPieces(piece.getPlayer()).add(new Piece(PlayerType.BLACK, PieceType.PAWN, 4, 3));
         list = KnightLogic.calculateMoves(piece, data);
         message = "List size = " + list.size();
         assertTrue(message, list.size() == 1);
@@ -77,10 +77,10 @@ public class KnightLogicTest {
     @Test
     public void PieceConflictTest() {
         GameData data = new GameData();
-        Piece piece = new Piece(PlayerType.WHITE, PieceType.KNIGHT, 0, 0);
+        Piece piece = new Piece(PlayerType.BLACK, PieceType.KNIGHT, 0, 0);
         var play1list = new ArrayList<Piece>();
         play1list.add(piece);
-        play1list.add(new Piece(PlayerType.WHITE, PieceType.ROOK, 1, 2));
+        play1list.add(new Piece(PlayerType.BLACK, PieceType.ROOK, 1, 2));
         data.setPlayer1Pieces(play1list);
 
         var list = KnightLogic.calculateMoves(piece, data);

@@ -63,7 +63,7 @@ public class RookLogicTest {
         assertTrue("x=8,y=5", list.contains(new PieceLocation(8, 5, PlayerType.WHITE)));
 
         // conflict
-        data.getPlayer1Pieces().add(new Piece(PlayerType.WHITE, PieceType.PAWN, 5, 2));
+        data.getPlayerPieces(piece.getPlayer()).add(new Piece(PlayerType.WHITE, PieceType.PAWN, 5, 2));
         list = RookLogic.calculateMoves(piece, data);
         message = "List size = " + list.size();
         assertTrue(message, list.size() == 13);
@@ -147,7 +147,7 @@ public class RookLogicTest {
         assertTrue("x=8,y=5", list.contains(new PieceLocation(8, 5, PlayerType.BLACK)));
 
         // conflict
-        data.getPlayer1Pieces().add(new Piece(PlayerType.BLACK, PieceType.PAWN, 5, 2));
+        data.getPlayerPieces(piece.getPlayer()).add(new Piece(PlayerType.BLACK, PieceType.PAWN, 5, 2));
         list = RookLogic.calculateMoves(piece, data);
         message = "List size = " + list.size();
         assertTrue(message, list.size() == 13);
@@ -185,10 +185,10 @@ public class RookLogicTest {
     @Test
     public void PieceConflictTest() {
         GameData data = new GameData();
-        Piece piece = new Piece(PlayerType.WHITE, PieceType.ROOK, 0, 0);
+        Piece piece = new Piece(PlayerType.BLACK, PieceType.ROOK, 0, 0);
         var play1list = new ArrayList<Piece>();
         play1list.add(piece);
-        play1list.add(new Piece(PlayerType.WHITE, PieceType.ROOK, 0, 1));
+        play1list.add(new Piece(PlayerType.BLACK, PieceType.ROOK, 0, 1));
         data.setPlayer1Pieces(play1list);
 
         var list = RookLogic.calculateMoves(piece, data);

@@ -52,10 +52,10 @@ public class PawnLogicTest {
     @Test
     public void PieceConflictTest() {
         GameData data = new GameData();
-        Piece piece = new Piece(PlayerType.WHITE, PieceType.PAWN, 0, 0);
+        Piece piece = new Piece(PlayerType.BLACK, PieceType.PAWN, 0, 0);
         var play1list = new ArrayList<Piece>();
         play1list.add(piece);
-        play1list.add(new Piece(PlayerType.WHITE, PieceType.ROOK, 0, 1));
+        play1list.add(new Piece(PlayerType.BLACK, PieceType.ROOK, 0, 1));
         data.setPlayer1Pieces(play1list);
 
         var list = PawnLogic.calculateMoves(piece, data);
@@ -110,8 +110,8 @@ public class PawnLogicTest {
     @Test
     public void freePlacementMovesTest() {
         GameData data = new GameData();
-        Piece piece = new Piece(PlayerType.WHITE, PieceType.PAWN, 0, 0);
-        Piece onBoardPiece = new Piece(PlayerType.WHITE, PieceType.PAWN, 1, 0);
+        Piece piece = new Piece(PlayerType.BLACK, PieceType.PAWN, 0, 0);
+        Piece onBoardPiece = new Piece(PlayerType.BLACK, PieceType.PAWN, 1, 0);
         piece.setOnBoard(false);
         var play1list = new ArrayList<Piece>();
         play1list.add(onBoardPiece);

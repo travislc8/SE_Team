@@ -41,7 +41,7 @@ public class SilverGeneralLogicTest {
         assertTrue("x=6,y=4", list.contains(new PieceLocation(6, 4, PlayerType.WHITE)));
 
         // conflict
-        data.getPlayer1Pieces().add(new Piece(PlayerType.WHITE, PieceType.PAWN, 4, 6));
+        data.getPlayerPieces(piece.getPlayer()).add(new Piece(PlayerType.WHITE, PieceType.PAWN, 4, 6));
         list = SilverGeneralLogic.calculateMoves(piece, data);
         message = "List size = " + list.size();
         assertTrue(message, list.size() == 4);
@@ -83,7 +83,7 @@ public class SilverGeneralLogicTest {
         assertTrue("x=6,y=6", list.contains(new PieceLocation(6, 6, PlayerType.BLACK)));
 
         // conflict
-        data.getPlayer1Pieces().add(new Piece(PlayerType.BLACK, PieceType.PAWN, 4, 4));
+        data.getPlayerPieces(piece.getPlayer()).add(new Piece(PlayerType.BLACK, PieceType.PAWN, 4, 4));
         list = SilverGeneralLogic.calculateMoves(piece, data);
         message = "List size = " + list.size();
         assertTrue(message, list.size() == 4);
@@ -102,10 +102,10 @@ public class SilverGeneralLogicTest {
     @Test
     public void PieceConflictTest() {
         GameData data = new GameData();
-        Piece piece = new Piece(PlayerType.WHITE, PieceType.SILVERGENERAL, 0, 0);
+        Piece piece = new Piece(PlayerType.BLACK, PieceType.SILVERGENERAL, 0, 0);
         var play1list = new ArrayList<Piece>();
         play1list.add(piece);
-        play1list.add(new Piece(PlayerType.WHITE, PieceType.ROOK, 0, 1));
+        play1list.add(new Piece(PlayerType.BLACK, PieceType.ROOK, 0, 1));
         data.setPlayer1Pieces(play1list);
 
         var list = SilverGeneralLogic.calculateMoves(piece, data);
