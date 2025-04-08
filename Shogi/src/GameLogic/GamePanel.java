@@ -7,7 +7,7 @@ import javax.swing.border.*;
 
 public class GamePanel extends JPanel {
 
-	
+	private GameData gd;
 	
 	//Have a 2d array for the visuals of the board (used below), AND have a parallel 2d array of Pieces for logic side
 	//	(when you click a coordinate on visual array, take data from same coordinate of logic array (containing Piece objects)
@@ -20,6 +20,7 @@ public class GamePanel extends JPanel {
 	private ArrayList<Piece> objectBlackInventory;
 	
 	private static String BOARD_COLOR = "#A1662F";
+	private static String VALID_MOVE_COLOR = "#66EE66";
 	
 
 	private JPanel boardPanel; //Panel that will contain the board
@@ -35,6 +36,25 @@ public class GamePanel extends JPanel {
 	
 	private HashMap<String, ImageIcon> pieceImages;
 	
+	public GameData getGameData() {
+		return gd;
+	}
+	
+	public Piece[][] getObjectBoard() {
+		return objectBoard;
+	}
+	
+	public JLabel[][] getBoardGrid() {
+		return boardGrid;
+	}
+	
+	public JPanel getBoardPanel() {
+		return boardPanel;
+	}
+	
+	
+	
+	
 	
 	public GamePanel(GameControl gc) {
 		
@@ -49,6 +69,7 @@ public class GamePanel extends JPanel {
 		objectBoard = new Piece[9][9];
 		
 		boardPanel = new JPanel(new GridLayout(9,9));
+		boardPanel.addMouseListener(gc);
 		
 		
 		for (int row = 0; row < 9; row++) {
@@ -139,6 +160,8 @@ public class GamePanel extends JPanel {
 		this.add(blackInventoryPanel);
 		this.add(timerPanel);
 		
+		//give the control a reference to this Panel
+		gc.setGamePanel(this);
 	}
 	
 	private void CreatePieceImagesHashMap() {
@@ -223,7 +246,35 @@ public class GamePanel extends JPanel {
 		
 	}
 	
+	public void clearValidMoves() {
+		for (int row = 0; row < 9; row++) {
+			for (int col = 0; col < 9; col++) { 
+				boardGrid[col][row].setText("");
+				boardGrid[col][row].setBackground(Color.decode(BOARD_COLOR));
+			}
+		}
+	}
+	
+	public void showValidMoves(ArrayList <PieceLocation> validSquares) {
+		
+		for (PieceLocation square : validSquares) {
+			
+			int col = square.getxPos();
+			int row = square.getyPos();
+			
+			
+			boardGrid[col][row].setBackground(Color.decode(VALID_MOVE_COLOR));
+			
+			
+		}
+		
+	}
+	
+	
+	
 	public void updateBoard(GameData gd) {
+		
+		this.gd = gd;
 		
 		//get the black player's pieces /\ (up)
 		ArrayList<Piece> blackPieces = gd.getPlayerPieces(PlayerType.BLACK);

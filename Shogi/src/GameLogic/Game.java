@@ -45,7 +45,6 @@ public class Game {
 		Piece pawn2 = new Piece(PlayerType.BLACK, PieceType.PAWN, 1, 6);
 		Piece pawn3 = new Piece(PlayerType.BLACK, PieceType.PAWN, 2, 6);
 		
-		
 		ArrayList<Piece> pieces = new ArrayList<>();
 		pieces.add(bishop);
 		pieces.add(king);
@@ -67,6 +66,63 @@ public class Game {
 		
 		gd.setPlayer1Pieces(pieces);
 		gd.setPlayer2Pieces(whitePieces);
+		
+		//calculate moves for 
+		for (Piece piece : gd.getPlayer1Pieces()) {
+			if (piece.getPieceType() == PieceType.BISHOP) {
+				ArrayList<PieceLocation> validMoves = BishopLogic.calculateMoves(piece, gd);
+				piece.setAvailableMoves(validMoves);
+			} else if (piece.getPieceType() == PieceType.KING) {
+				ArrayList<PieceLocation> validMoves = KingLogic.calculateMoves(piece, gd);
+				piece.setAvailableMoves(validMoves);
+			} else if (piece.getPieceType() == PieceType.ROOK) {
+				ArrayList<PieceLocation> validMoves = RookLogic.calculateMoves(piece, gd);
+				piece.setAvailableMoves(validMoves);
+			} else if (piece.getPieceType() == PieceType.PAWN) {
+				ArrayList<PieceLocation> validMoves = PawnLogic.calculateMoves(piece, gd);
+				piece.setAvailableMoves(validMoves);
+			} else if (piece.getPieceType() == PieceType.LANCE) {
+				ArrayList<PieceLocation> validMoves = LanceLogic.calculateMoves(piece, gd);
+				piece.setAvailableMoves(validMoves);
+			} else if (piece.getPieceType() == PieceType.KNIGHT) {
+				ArrayList<PieceLocation> validMoves = KnightLogic.calculateMoves(piece, gd);
+				piece.setAvailableMoves(validMoves);
+			} else if (piece.getPieceType() == PieceType.SILVERGENERAL) {
+				ArrayList<PieceLocation> validMoves = SilverGeneralLogic.calculateMoves(piece, gd);
+				piece.setAvailableMoves(validMoves);
+			} else if (piece.getPieceType() == PieceType.GOLDGENERAL) {
+				ArrayList<PieceLocation> validMoves = GoldGeneralLogic.calculateMoves(piece, gd);
+				piece.setAvailableMoves(validMoves);
+			}
+		}
+		
+		for (Piece piece : gd.getPlayer2Pieces()) {
+			if (piece.getPieceType() == PieceType.BISHOP) {
+				ArrayList<PieceLocation> validMoves = BishopLogic.calculateMoves(piece, gd);
+				piece.setAvailableMoves(validMoves);
+			} else if (piece.getPieceType() == PieceType.KING) {
+				ArrayList<PieceLocation> validMoves = KingLogic.calculateMoves(piece, gd);
+				piece.setAvailableMoves(validMoves);
+			} else if (piece.getPieceType() == PieceType.ROOK) {
+				ArrayList<PieceLocation> validMoves = RookLogic.calculateMoves(piece, gd);
+				piece.setAvailableMoves(validMoves);
+			} else if (piece.getPieceType() == PieceType.PAWN) {
+				ArrayList<PieceLocation> validMoves = PawnLogic.calculateMoves(piece, gd);
+				piece.setAvailableMoves(validMoves);
+			} else if (piece.getPieceType() == PieceType.LANCE) {
+				ArrayList<PieceLocation> validMoves = LanceLogic.calculateMoves(piece, gd);
+				piece.setAvailableMoves(validMoves);
+			} else if (piece.getPieceType() == PieceType.KNIGHT) {
+				ArrayList<PieceLocation> validMoves = KnightLogic.calculateMoves(piece, gd);
+				piece.setAvailableMoves(validMoves);
+			} else if (piece.getPieceType() == PieceType.SILVERGENERAL) {
+				ArrayList<PieceLocation> validMoves = SilverGeneralLogic.calculateMoves(piece, gd);
+				piece.setAvailableMoves(validMoves);
+			} else if (piece.getPieceType() == PieceType.GOLDGENERAL) {
+				ArrayList<PieceLocation> validMoves = GoldGeneralLogic.calculateMoves(piece, gd);
+				piece.setAvailableMoves(validMoves);
+			}
+		}
 		
 		//((GamePanel) View1).PrintBeginningBoardTest();
 		((GamePanel) View1).updateBoard(gd);
