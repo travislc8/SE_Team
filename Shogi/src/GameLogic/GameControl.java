@@ -66,14 +66,18 @@ public class GameControl implements MouseListener {
 		        	
 		        	//A VALID MOVE WAS SELECTED
 		        	//move the selected piece to the new valid location
-		        	selectedPiece.setLocation(new PieceLocation(col, row, selectedPiece.getPlayer()));
+		        	
+		        	//PLACEHOLDER CODE UNTIL Move CLASS IS IMPLEMENTED
+		        	selectedPiece.setLocation(new PieceLocation(col, row, selectedPiece.getPlayer())); 
+		        	//PLACEHOLDER
+		        	
+		        	
 		        	System.out.println("Move Selected");
 		        	
 		        	gp.clearEntireBoard();
 		        	gp.updateBoard(gd);
 		        	//leave this block
 		        	return;
-		        	
 		        }
 		        
 		        //set the new selected piece
