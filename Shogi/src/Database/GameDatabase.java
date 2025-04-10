@@ -1,122 +1,133 @@
 package Database;
 
 import java.io.*;
-import java.util.HashMap;
-import java.util.Map.Entry;
+import java.sql.*;
+import java.util.*;
+
 
 public class GameDatabase
 {
-  // Private data fields for storing the file streams.
-  FileInputStream fis;
-  FileOutputStream fos;
-
-  // Private data field for storing a HashMap of usernames and passwords.
-  HashMap<String, String> database;
-  
-  // Method for verifying a username and password.
-  public boolean verifyAccount(String username, String password)
+  private Connection conn;
+  //Add any other data fields you like – at least a Connection object is mandatory
+  public GameDatabase()
   {
-    // Read the database file.
-    readFile();
-    
-    // Stop if this account doesn't exist.
-    if (database.get(username) == null)
-      return false;
-    
-    // Check the username and password.
-    if (database.get(username).equals(password))
-      return true;
-    else
-      return false;
+	  // Create properties object
+	  Properties prop = new Properties();
+	  FileInputStream fis = null;
+	  
+	  // open the db.properties with FileInputStream
+	  try
+	  {
+		  fis = new FileInputStream("lab7out/db.properties");
+	  }
+	  catch(FileNotFoundException e)
+	  {
+		  e.printStackTrace();
+	  }
+	  
+	  //parse the properties file (key/value)
+	  try {
+		prop.load(fis);
+	} catch (IOException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+	  
+	  String url = prop.getProperty("url");
+	  String user = prop.getProperty("user");
+	  String pass = prop.getProperty("password");
+	  
+	  try
+	  {
+		  conn = DriverManager.getConnection(url, user, pass);
+	  }
+	  catch(SQLException e)
+	  {
+		  e.printStackTrace();
+	  }
   }
   
-  // Method for creating a new account.
-  public boolean createNewAccount(String username, String password)
+  public ArrayList<String> query(String query)
   {
-    // Read the database file.
-    readFile();
-    
-    // Stop if this account already exists.
-    if (database.get(username) != null)
-      return false;
-    
-    // Add the new account.
-    database.put(username, password);
-    
-    // Write the database to the file.
-    writeFile();
-    return true;
+	  //Declare the return value first
+	  ArrayList<String> list = new ArrayList<String>();
+	  String record = "";
+	  
+	  // Process the query
+	  try
+	  {
+		  // 1. Create a Statement object
+		  Statement stmt = conn.createStatement();
+		  
+		  // 2. Execute the Query on the stmt
+		  ResultSet rs = stmt.executeQuery(query);
+		  
+		  // 3. Get the metadata
+		  ResultSetMetaData rsmd = rs.getMetaData();
+		  
+		  int noFields = rsmd.getColumnCount();
+		  
+		  // 4. Iterate through each record
+		  while(rs.next()) 
+		  {
+			  record = "";
+			 for(int i = 0; i < noFields; i++)
+			 {
+				 record += rs.getString(i + 1);
+				 record += ",";
+			 }
+			 list.add(record);
+		  }
+		  //Check for empty
+		  if(list.isEmpty())
+		  {
+			  return null;
+		  }
+	  }
+	  catch(SQLException e)
+	  {
+		  return null;
+	  }
+	  
+	  return list;
+	  
   }
   
-  // Method for reading the database from a file.
-  public synchronized void readFile()
+  public void executeDML(String dml) throws SQLException
   {
-    // Create a new HashMap for the database.
-    database = new HashMap<String, String>();
-    
-    // Catch any exceptions that occur when reading the file.
-    try
-    {
-      // Create a FileInputStream and a BufferedReader.
-      fis = new FileInputStream("database.txt");
-      BufferedReader reader = new BufferedReader(new InputStreamReader(fis));
-      
-      // Read every line from the file one at a time.
-      String line = reader.readLine();
-      while(line != null)
-      {
-        // Split this line into the username and password components.
-        String[] data = line.split("\\|");
-        
-        // Save the username and password in the HashMap.
-        if (data.length == 2)
-          database.put(data[0], data[1]);
-        
-        // Read the next line from the file.
-        line = reader.readLine();
-      }
-      
-      // Make sure the file is closed.
-      fis.close();
-    }
-    
-    // If an exception occurs, we can't do anything else.
-    catch (Exception exception)
-    {
-      return;
-    }
+	  // Create a statement from the connection
+	  Statement stmt = conn.createStatement();
+	  
+	  // Execute the DML
+	  stmt.execute(dml);
   }
   
-  // Method for writing to the current database to a file.
-  public synchronized void writeFile()
-  {
-    // Loop through every account in the database.
-    String output = "";
-    for (Entry<String, String> entry : database.entrySet())
-    {
-      // Append the username and password for this account to our output.
-      output += entry.getKey() + "|" + entry.getValue() + "\n";
-    }
-    
-    // Catch any exceptions that occur when writing the file.
-    try
-    {
-      // Create a FileOutputStream and BufferedWriter.
-      fos = new FileOutputStream("database.txt");
-      BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(fos));
-      
-      // Write the file contents.
-      writer.write(output);
-      writer.flush();
-      
-      // Make sure the file is closed.
-      fos.close();
-    }
-    
-    // If an exception occurs, we can't do anything else.
-    catch (Exception exception)
-    {
-      return;
-    }
-  }
+  public boolean usernameExists(String username) {
+	    String query = "SELECT * FROM User WHERE username = '" + username + "'";
+	    ArrayList<String> result = query(query);
+	    return result != null;
+	}
+  
+  public boolean verifyUser(String username, String password) {
+	    String encryptionKey = "key";
+	    String query = "SELECT * FROM User WHERE username = '" + username + 
+	                   "' AND password = AES_ENCRYPT('" + password + "', '" + encryptionKey + "')";
+	    ArrayList<String> result = query(query);
+	    return result != null;
+	}
+  
+  public boolean createUser(String username, String password) {
+	    String encryptionKey = "key";
+	    String dml = "INSERT INTO User (username, password) VALUES ('" + username + "', AES_ENCRYPT('" + password + "', '" + encryptionKey + "'))";
+	    try {
+	        executeDML(dml);
+	        return true;
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	        return false;
+	    }
+	}
+  
+  
 }
+

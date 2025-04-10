@@ -7,6 +7,7 @@ import Database.GameDatabase;
 import UserManagement.CreateAccountData;
 import UserManagement.LoginData;
 
+
 import java.io.IOException;
 import ocsf.server.AbstractServer;
 import ocsf.server.ConnectionToClient;
@@ -32,6 +33,10 @@ public class GameServer extends AbstractServer
     return running;
   }
   
+  public void setDatabase(GameDatabase database)
+  {
+    this.database = database;
+  }
 
   // When a message is received from a client, handle it.
   public void handleMessageFromClient(Object arg0, ConnectionToClient arg1)
@@ -42,7 +47,7 @@ public class GameServer extends AbstractServer
       // Check the username and password with the database.
       LoginData data = (LoginData)arg0;
       Object result;
-      if (database.verifyAccount(data.getUsername(), data.getPassword()))
+      if (database.verifyUser(data.getUsername(), data.getPassword()))
       {
         result = "LoginSuccessful";
         //log.append("Client " + arg1.getId() + " successfully logged in as " + data.getUsername() + "\n");
@@ -70,7 +75,8 @@ public class GameServer extends AbstractServer
       // Try to create the account.
       CreateAccountData data = (CreateAccountData)arg0;
       Object result;
-      if (database.createNewAccount(data.getUsername(), data.getPassword()))
+      if (!database.usernameExists(data.getUsername()) &&
+  		    database.createUser(data.getUsername(), data.getPassword()))
       {
         result = "CreateAccountSuccessful";
         //log.append("Client " + arg1.getId() + " created a new account called " + data.getUsername() + "\n");
