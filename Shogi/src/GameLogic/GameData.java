@@ -20,6 +20,12 @@ public class GameData {
     }
 
     public void setPlayer1Pieces(ArrayList<Piece> player1Pieces) {
+        if (player1Pieces.isEmpty()) {
+            return;
+        }
+        if (player1Pieces.getFirst().getPlayer() != player1Type) {
+            throw new IllegalArgumentException("Player 1 type must be Black");
+        }
         this.player1Pieces = player1Pieces;
     }
 
@@ -36,6 +42,12 @@ public class GameData {
     }
 
     public void setPlayer2Pieces(ArrayList<Piece> player2Pieces) {
+        if (player2Pieces.isEmpty()) {
+            return;
+        }
+        if (player2Pieces.getFirst().getPlayer() != player2Type) {
+            throw new IllegalArgumentException("Player 2 type must be White");
+        }
         this.player2Pieces = player2Pieces;
     }
 
@@ -48,7 +60,7 @@ public class GameData {
     }
 
     public ArrayList<Piece> getOtherPlayerPieces(PlayerType playerType) {
-        if (playerType != player1Type) {
+        if (playerType == player1Type) {
             return player2Pieces;
         } else {
             return player1Pieces;
