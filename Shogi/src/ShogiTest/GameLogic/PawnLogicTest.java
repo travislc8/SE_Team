@@ -19,9 +19,9 @@ public class PawnLogicTest {
     public void SimpleWhiteMoveTest() {
         GameData data = new GameData();
         Piece piece = new Piece(PlayerType.WHITE, PieceType.PAWN, 0, 0);
-        var play1list = new ArrayList<Piece>();
-        play1list.add(piece);
-        data.setPlayer1Pieces(play1list);
+        var play2list = new ArrayList<Piece>();
+        play2list.add(piece);
+        data.setPlayer2Pieces(play2list);
 
         var list = PawnLogic.calculateMoves(piece, data);
 
@@ -68,9 +68,9 @@ public class PawnLogicTest {
     public void LocationOutOfBoundsTest() {
         GameData data = new GameData();
         Piece piece = new Piece(PlayerType.WHITE, PieceType.PAWN, 8, 8);
-        var play1list = new ArrayList<Piece>();
-        play1list.add(piece);
-        data.setPlayer1Pieces(play1list);
+        var play2list = new ArrayList<Piece>();
+        play2list.add(piece);
+        data.setPlayer2Pieces(play2list);
 
         var list = PawnLogic.calculateMoves(piece, data);
 
@@ -83,9 +83,9 @@ public class PawnLogicTest {
         GameData data = new GameData();
         Piece piece = new Piece(PlayerType.WHITE, PieceType.PAWN, 5, 5);
         piece.setPromoted(true);
-        var play1list = new ArrayList<Piece>();
-        play1list.add(piece);
-        data.setPlayer1Pieces(play1list);
+        var play2list = new ArrayList<Piece>();
+        play2list.add(piece);
+        data.setPlayer2Pieces(play2list);
 
         var list = PawnLogic.calculateMoves(piece, data);
 

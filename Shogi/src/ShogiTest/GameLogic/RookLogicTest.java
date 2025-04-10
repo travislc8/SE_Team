@@ -18,9 +18,9 @@ public class RookLogicTest {
     public void SimpleWhiteMoveTest() {
         GameData data = new GameData();
         Piece piece = new Piece(PlayerType.WHITE, PieceType.ROOK, 5, 5);
-        var play1list = new ArrayList<Piece>();
-        play1list.add(piece);
-        data.setPlayer1Pieces(play1list);
+        var play2list = new ArrayList<Piece>();
+        play2list.add(piece);
+        data.setPlayer2Pieces(play2list);
 
         var list = RookLogic.calculateMoves(piece, data);
 
@@ -185,25 +185,25 @@ public class RookLogicTest {
     @Test
     public void PieceConflictTest() {
         GameData data = new GameData();
-        Piece piece = new Piece(PlayerType.BLACK, PieceType.ROOK, 0, 0);
+        Piece piece = new Piece(PlayerType.WHITE, PieceType.ROOK, 8, 8);
         var play1list = new ArrayList<Piece>();
-        play1list.add(piece);
-        play1list.add(new Piece(PlayerType.BLACK, PieceType.ROOK, 0, 1));
+        play1list.add(new Piece(PlayerType.BLACK, PieceType.ROOK, 8, 7));
+        play1list.add(new Piece(PlayerType.BLACK, PieceType.ROOK, 7, 8));
         data.setPlayer1Pieces(play1list);
 
         var list = RookLogic.calculateMoves(piece, data);
 
         String message = "List size = " + list.size();
-        assertTrue(message, list.size() == 8);
+        assertTrue(message, list.size() == 2);
     }
 
     @Test
     public void LocationOutOfBoundsTest() {
         GameData data = new GameData();
         Piece piece = new Piece(PlayerType.WHITE, PieceType.ROOK, 8, 8);
-        var play1list = new ArrayList<Piece>();
-        play1list.add(piece);
-        data.setPlayer1Pieces(play1list);
+        var play2list = new ArrayList<Piece>();
+        play2list.add(piece);
+        data.setPlayer2Pieces(play2list);
 
         var list = RookLogic.calculateMoves(piece, data);
 
@@ -216,9 +216,9 @@ public class RookLogicTest {
         GameData data = new GameData();
         Piece piece = new Piece(PlayerType.WHITE, PieceType.ROOK, 5, 5);
         piece.setPromoted(true);
-        var play1list = new ArrayList<Piece>();
-        play1list.add(piece);
-        data.setPlayer1Pieces(play1list);
+        var play2list = new ArrayList<Piece>();
+        play2list.add(piece);
+        data.setPlayer2Pieces(play2list);
 
         var list = RookLogic.calculateMoves(piece, data);
 
@@ -275,9 +275,9 @@ public class RookLogicTest {
         Piece piece = new Piece(PlayerType.WHITE, PieceType.ROOK, 0, 0);
         Piece onBoardPiece = new Piece(PlayerType.WHITE, PieceType.ROOK, 1, 0);
         piece.setOnBoard(false);
-        var play1list = new ArrayList<Piece>();
-        play1list.add(onBoardPiece);
-        data.setPlayer1Pieces(play1list);
+        var play2list = new ArrayList<Piece>();
+        play2list.add(onBoardPiece);
+        data.setPlayer2Pieces(play2list);
 
         var list = RookLogic.calculateMoves(piece, data);
 

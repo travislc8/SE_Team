@@ -18,9 +18,9 @@ public class BishopLogicTest {
     public void SimpleWhiteMoveTest() {
         GameData data = new GameData();
         Piece piece = new Piece(PlayerType.WHITE, PieceType.BISHOP, 5, 5);
-        var play1list = new ArrayList<Piece>();
-        play1list.add(piece);
-        data.setPlayer1Pieces(play1list);
+        var play2list = new ArrayList<Piece>();
+        play2list.add(piece);
+        data.setPlayer2Pieces(play2list);
 
         var list = BishopLogic.calculateMoves(piece, data);
 
@@ -169,25 +169,24 @@ public class BishopLogicTest {
     @Test
     public void PieceConflictTest() {
         GameData data = new GameData();
-        Piece piece = new Piece(PlayerType.BLACK, PieceType.BISHOP, 0, 0);
-        var play1list = new ArrayList<Piece>();
-        play1list.add(piece);
-        play1list.add(new Piece(PlayerType.BLACK, PieceType.ROOK, 1, 1));
-        data.setPlayer1Pieces(play1list);
+        Piece piece = new Piece(PlayerType.BLACK, PieceType.BISHOP, 8, 8);
+        var play2list = new ArrayList<Piece>();
+        play2list.add(new Piece(PlayerType.WHITE, PieceType.ROOK, 6, 6));
+        data.setPlayer2Pieces(play2list);
 
         var list = BishopLogic.calculateMoves(piece, data);
 
         String message = "List size = " + list.size();
-        assertTrue(message, list.size() == 0);
+        assertTrue(message, list.size() == 2);
     }
 
     @Test
     public void LocationOutOfBoundsTest() {
         GameData data = new GameData();
         Piece piece = new Piece(PlayerType.WHITE, PieceType.BISHOP, 8, 8);
-        var play1list = new ArrayList<Piece>();
-        play1list.add(piece);
-        data.setPlayer1Pieces(play1list);
+        var play2list = new ArrayList<Piece>();
+        play2list.add(piece);
+        data.setPlayer2Pieces(play2list);
 
         var list = BishopLogic.calculateMoves(piece, data);
 
@@ -200,9 +199,9 @@ public class BishopLogicTest {
         GameData data = new GameData();
         Piece piece = new Piece(PlayerType.WHITE, PieceType.BISHOP, 5, 5);
         piece.setPromoted(true);
-        var play1list = new ArrayList<Piece>();
-        play1list.add(piece);
-        data.setPlayer1Pieces(play1list);
+        var play2list = new ArrayList<Piece>();
+        play2list.add(piece);
+        data.setPlayer2Pieces(play2list);
 
         var list = BishopLogic.calculateMoves(piece, data);
 
@@ -255,9 +254,9 @@ public class BishopLogicTest {
         Piece piece = new Piece(PlayerType.WHITE, PieceType.BISHOP, 0, 0);
         Piece onBoardPiece = new Piece(PlayerType.WHITE, PieceType.BISHOP, 1, 0);
         piece.setOnBoard(false);
-        var play1list = new ArrayList<Piece>();
-        play1list.add(onBoardPiece);
-        data.setPlayer1Pieces(play1list);
+        var play2list = new ArrayList<Piece>();
+        play2list.add(onBoardPiece);
+        data.setPlayer2Pieces(play2list);
 
         var list = BishopLogic.calculateMoves(piece, data);
 

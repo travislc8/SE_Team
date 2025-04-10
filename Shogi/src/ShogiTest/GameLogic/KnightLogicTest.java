@@ -18,9 +18,9 @@ public class KnightLogicTest {
     public void SimpleWhiteMoveTest() {
         GameData data = new GameData();
         Piece piece = new Piece(PlayerType.WHITE, PieceType.KNIGHT, 5, 5);
-        var play1list = new ArrayList<Piece>();
-        play1list.add(piece);
-        data.setPlayer1Pieces(play1list);
+        var play2list = new ArrayList<Piece>();
+        play2list.add(piece);
+        data.setPlayer2Pieces(play2list);
 
         var list = KnightLogic.calculateMoves(piece, data);
 
@@ -80,7 +80,7 @@ public class KnightLogicTest {
         Piece piece = new Piece(PlayerType.BLACK, PieceType.KNIGHT, 0, 0);
         var play1list = new ArrayList<Piece>();
         play1list.add(piece);
-        play1list.add(new Piece(PlayerType.BLACK, PieceType.ROOK, 1, 2));
+        play1list.add(new Piece(PlayerType.BLACK, PieceType.ROOK, 2, 2));
         data.setPlayer1Pieces(play1list);
 
         var list = KnightLogic.calculateMoves(piece, data);
@@ -93,9 +93,9 @@ public class KnightLogicTest {
     public void LocationOutOfBoundsTest() {
         GameData data = new GameData();
         Piece piece = new Piece(PlayerType.WHITE, PieceType.KNIGHT, 8, 8);
-        var play1list = new ArrayList<Piece>();
-        play1list.add(piece);
-        data.setPlayer1Pieces(play1list);
+        var play2list = new ArrayList<Piece>();
+        play2list.add(piece);
+        data.setPlayer2Pieces(play2list);
 
         var list = KnightLogic.calculateMoves(piece, data);
 
@@ -108,9 +108,9 @@ public class KnightLogicTest {
         GameData data = new GameData();
         Piece piece = new Piece(PlayerType.WHITE, PieceType.KNIGHT, 5, 5);
         piece.setPromoted(true);
-        var play1list = new ArrayList<Piece>();
-        play1list.add(piece);
-        data.setPlayer1Pieces(play1list);
+        var play2list = new ArrayList<Piece>();
+        play2list.add(piece);
+        data.setPlayer2Pieces(play2list);
 
         var list = KnightLogic.calculateMoves(piece, data);
 
@@ -138,9 +138,9 @@ public class KnightLogicTest {
         Piece piece = new Piece(PlayerType.WHITE, PieceType.KNIGHT, 0, 0);
         Piece onBoardPiece = new Piece(PlayerType.WHITE, PieceType.KNIGHT, 1, 0);
         piece.setOnBoard(false);
-        var play1list = new ArrayList<Piece>();
-        play1list.add(onBoardPiece);
-        data.setPlayer1Pieces(play1list);
+        var play2list = new ArrayList<Piece>();
+        play2list.add(onBoardPiece);
+        data.setPlayer2Pieces(play2list);
 
         var list = KnightLogic.calculateMoves(piece, data);
 

@@ -22,6 +22,17 @@ public final class PieceLogic {
         return valid;
     }
 
+    public static boolean isOpponentLocation(PieceLocation location, GameData gameData) {
+        boolean valid = false;
+        for (Piece piece : gameData.getOtherPlayerPieces(location.getPlayer())) {
+            if (location.getxPos() == piece.getLocation().getxPos()
+                    && location.getyPos() == piece.getLocation().getyPos()) {
+                valid = true;
+            }
+        }
+        return valid;
+    }
+
     public static ArrayList<PieceLocation> goldGeneralMoveList(int x, int y, PlayerType type) {
         var list = new ArrayList<PieceLocation>();
         int offset = type.direction;

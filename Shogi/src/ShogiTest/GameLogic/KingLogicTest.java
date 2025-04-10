@@ -18,9 +18,9 @@ public class KingLogicTest {
     public void SimpleWhiteMoveTest() {
         GameData data = new GameData();
         Piece piece = new Piece(PlayerType.WHITE, PieceType.KING, 5, 5);
-        var play1list = new ArrayList<Piece>();
-        play1list.add(piece);
-        data.setPlayer1Pieces(play1list);
+        var play2list = new ArrayList<Piece>();
+        play2list.add(piece);
+        data.setPlayer2Pieces(play2list);
 
         var list = KingLogic.calculateMoves(piece, data);
 
@@ -141,9 +141,9 @@ public class KingLogicTest {
     public void LocationOutOfBoundsTest() {
         GameData data = new GameData();
         Piece piece = new Piece(PlayerType.WHITE, PieceType.KING, 8, 8);
-        var play1list = new ArrayList<Piece>();
-        play1list.add(piece);
-        data.setPlayer1Pieces(play1list);
+        var play2list = new ArrayList<Piece>();
+        play2list.add(piece);
+        data.setPlayer2Pieces(play2list);
 
         var list = KingLogic.calculateMoves(piece, data);
 
