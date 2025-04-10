@@ -20,6 +20,12 @@ public class PieceLocation {
         setPlayer(player);
     }
 
+    public PieceLocation(PieceLocation location) {
+        setxPos(location.getxPos());
+        setyPos(location.getyPos());
+        setPlayer(location.getPlayer());
+    }
+
     public PieceLocation() {
         setxPos(0);
         setyPos(0);
@@ -77,6 +83,13 @@ public class PieceLocation {
             check = false;
         }
         return check;
+    }
+
+    public boolean xyEqual(PieceLocation location) {
+        if (location.getxPos() == xPos && location.getyPos() == yPos)
+            return true;
+        else
+            return false;
     }
 
     @Override
