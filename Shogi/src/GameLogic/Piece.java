@@ -10,10 +10,19 @@ public class Piece {
     PieceLocation location;
     ArrayList<PieceLocation> availableMoves;
 
+    public Piece(PlayerType player, PieceType piece, boolean onBoard) {
+        this.player = player;
+        this.pieceType = piece;
+        this.location = new PieceLocation(-1, -1, player);
+        promoted = false;
+        this.onBoard = onBoard;
+        availableMoves = new ArrayList<>();
+    }
+
     public Piece(PlayerType player, PieceType piece, PieceLocation location) {
         this.player = player;
         this.pieceType = piece;
-        this.location = location;
+        this.location = new PieceLocation(location.getxPos(), location.getyPos(), location.getPlayer());
         promoted = false;
         onBoard = true;
         availableMoves = new ArrayList<>();
@@ -25,6 +34,7 @@ public class Piece {
         this.location = new PieceLocation(x, y, player);
         onBoard = true;
         promoted = false;
+        availableMoves = new ArrayList<>();
     }
 
     public boolean isOnBoard() {
@@ -64,7 +74,9 @@ public class Piece {
     }
 
     public void setLocation(PieceLocation location) {
-        this.location = location;
+        this.location.setxPos(location.getxPos());
+        this.location.setyPos(location.getyPos());
+        this.location.setPlayer(location.getPlayer());
     }
 
     public void setx(int x) {
@@ -72,7 +84,7 @@ public class Piece {
     }
 
     public void sety(int y) {
-        location.setxPos(y);
+        location.setyPos(y);
     }
 
     public ArrayList<PieceLocation> getAvailableMoves() {

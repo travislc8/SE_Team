@@ -1,10 +1,7 @@
 package ShogiTest.GameLogic;
 
-import org.junit.internal.TextListener;
-import org.junit.runner.*;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
-import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({ ShogiTest.GameLogic.PieceLocationTest.class,
@@ -17,7 +14,8 @@ import org.junit.runners.Suite.SuiteClasses;
         LanceLogicTest.class,
         BishopLogicTest.class,
         RookLogicTest.class,
-        PawnLogicTest.class
+        PawnLogicTest.class,
+        MoveCalculatorTest.class
 })
 public final class AllTestsSuite {
 }

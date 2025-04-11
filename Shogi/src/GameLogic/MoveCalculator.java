@@ -19,28 +19,32 @@ public class MoveCalculator {
             piece.setAvailableMoves(getMoves(piece));
         }
 
-        // System.out.println("op.size " + opPieces.size());
         PieceLocation kingLocation = getKingLocation(activePlayer);
 
         if (isKingDiscoverable(kingLocation, opPieces)) {
-            System.out.println("kd");
             for (var piece : gameData.getPlayerPieces(activePlayer)) {
                 if (piece.getPieceType() != PieceType.KING) {
-                    // ??????
                     piece.setAvailableMoves(getSafeMoves(piece, kingLocation, opPieces));
                 } else {
                     piece.setAvailableMoves(getSafeKingMoves(piece, kingLocation, opPieces));
                 }
             }
+            if (gameData.getPlayerHand(activePlayer) != null) {
+                for (var piece : gameData.getPlayerHand(activePlayer)) {
+                    piece.setAvailableMoves(getSafeFreeMove(piece, kingLocation, opPieces));
+                }
+            }
         } else {
-            System.out.println("nkd");
             for (var piece : gameData.getPlayerPieces(activePlayer)) {
                 if (piece.getPieceType() != PieceType.KING) {
                     piece.setAvailableMoves(getMoves(piece));
                 } else {
-                    System.out.println("king");
-                    System.out.println("op.size " + opPieces.size());
                     piece.setAvailableMoves(getSafeKingMoves(piece, kingLocation, opPieces));
+                }
+            }
+            if (gameData.getPlayerHand(activePlayer) != null) {
+                for (var piece : gameData.getPlayerHand(activePlayer)) {
+                    piece.setAvailableMoves(getMoves(piece));
                 }
             }
         }
@@ -52,14 +56,11 @@ public class MoveCalculator {
 
         int returnX = king.getLocation().getxPos();
         int returnY = king.getLocation().getyPos();
-        System.out.println(returnX + ":" + returnY);
 
         var safeMoves = new ArrayList<PieceLocation>();
         for (var move : getMoves(king)) {
-            System.out.println("move -> " + move.getxPos() + ":" + move.getyPos());
             king.setx(move.getxPos());
             king.sety(move.getyPos());
-            System.out.println("op.size: " + opPieces.size());
             if (!isKingInDanger(new PieceLocation(move), opPieces)) {
                 safeMoves.add(move);
             }
@@ -71,6 +72,40 @@ public class MoveCalculator {
         return safeMoves;
     }
 
+    private ArrayList<PieceLocation> getSafeFreeMove(Piece movePiece, PieceLocation kingLocation,
+            ArrayList<Piece> opPieces) {
+        // current idea is that changing the movePiece location should change it in the
+        // class game data
+        int returnX = movePiece.getLocation().getxPos();
+        int returnY = movePiece.getLocation().getyPos();
+        var moves = getMoves(movePiece);
+        gameData.getPlayerPieces(movePiece.getPlayer()).add(movePiece);
+        movePiece.setOnBoard(true);
+
+        var safeMoves = new ArrayList<PieceLocation>();
+        Piece removedPiece = null;
+        for (var move : moves) {
+            movePiece.setx(move.getxPos());
+            movePiece.sety(move.getyPos());
+            removedPiece = gameData.removeOpPieceAt(movePiece.getPlayer(), move.getxPos(), move.getyPos());
+            if (movePiece.getLocation().getxPos() == 5 && movePiece.getLocation().getyPos() == 4) {
+            }
+            if (!isKingInDanger(kingLocation, opPieces)) {
+                safeMoves.add(move);
+            }
+            if (removedPiece != null) {
+                gameData.getOtherPlayerPieces(movePiece.getPlayer()).add(removedPiece);
+                removedPiece = null;
+            }
+        }
+
+        movePiece.getLocation().setxPos(returnX);
+        movePiece.getLocation().setyPos(returnY);
+        gameData.getPlayerPieces(movePiece.getPlayer()).remove(movePiece);
+        return safeMoves;
+
+    }
+
     private ArrayList<PieceLocation> getSafeMoves(Piece movePiece, PieceLocation kingLocation,
             ArrayList<Piece> opPieces) {
         // current idea is that changing the movePiece location should change it in the
@@ -79,11 +114,17 @@ public class MoveCalculator {
         int returnY = movePiece.getLocation().getyPos();
 
         var safeMoves = new ArrayList<PieceLocation>();
+        Piece removedPiece = null;
         for (var move : getMoves(movePiece)) {
             movePiece.setx(move.getxPos());
             movePiece.sety(move.getyPos());
+            removedPiece = gameData.removeOpPieceAt(movePiece.getPlayer(), move.getxPos(), move.getyPos());
             if (!isKingInDanger(kingLocation, opPieces)) {
                 safeMoves.add(move);
+            }
+            if (removedPiece != null) {
+                gameData.getOtherPlayerPieces(movePiece.getPlayer()).add(removedPiece);
+                removedPiece = null;
             }
         }
 
@@ -105,15 +146,11 @@ public class MoveCalculator {
     }
 
     private boolean isKingInDanger(PieceLocation kingLocation, ArrayList<Piece> opPieces) {
-        System.out.println("op.size: " + opPieces.size());
         for (var piece : opPieces) {
-            for (var location : piece.getAvailableMoves()) {
+            for (var location : getMoves(piece)) {
                 if (location.xyEqual(kingLocation)) {
-                    System.out.println("d");
                     return true;
                 }
-                System.out.println(kingLocation.getxPos() + "!=" + piece.getLocation().getxPos()
-                        + " && " + kingLocation.getyPos() + "!=" + piece.getLocation().getyPos());
             }
         }
         // only reachable if no locations matched

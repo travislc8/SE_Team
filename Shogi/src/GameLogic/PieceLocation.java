@@ -92,6 +92,13 @@ public class PieceLocation {
             return false;
     }
 
+    public boolean xyEqual(int x, int y) {
+        if (x == xPos && y == yPos)
+            return true;
+        else
+            return false;
+    }
+
     @Override
     public int hashCode() {
         return super.hashCode();
