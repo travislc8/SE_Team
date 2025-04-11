@@ -15,7 +15,8 @@ import org.junit.runners.Suite;
         BishopLogicTest.class,
         RookLogicTest.class,
         PawnLogicTest.class,
-        MoveCalculatorTest.class
+        MoveCalculatorTest.class,
+        GameTest.class
 })
 public final class AllTestsSuite {
 }

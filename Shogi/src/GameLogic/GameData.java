@@ -1,6 +1,9 @@
 package GameLogic;
 
+import java.sql.Date;
+import java.sql.Time;
 import java.util.ArrayList;
+import java.util.Timer;
 
 public class GameData {
     PlayerType player1Type;
@@ -16,11 +19,125 @@ public class GameData {
     int player2Time;
     int gameId;
 
+    boolean gameStarted;
+    long lastMoveTime;
+
     public GameData() {
         player1Type = PlayerType.BLACK;
         player2Type = PlayerType.WHITE;
         player1Pieces = new ArrayList<>();
         player2Pieces = new ArrayList<>();
+        player1Hand = new ArrayList<>();
+        player2Hand = new ArrayList<>();
+        moveList = new ArrayList<>();
+
+    }
+
+    public void newGame() {
+        activePlayer = PlayerType.BLACK;
+        moveList = new ArrayList<>();
+        player1Hand = new ArrayList<>();
+        player2Hand = new ArrayList<>();
+        player1Time = 300;
+        player2Time = 300;
+        gameOver = false;
+
+        setPieces();
+    }
+
+    private void setPieces() {
+        player2Pieces.add(new Piece(PlayerType.WHITE, PieceType.PAWN, 0, 2));
+        player2Pieces.add(new Piece(PlayerType.WHITE, PieceType.PAWN, 1, 2));
+        player2Pieces.add(new Piece(PlayerType.WHITE, PieceType.PAWN, 2, 2));
+        player2Pieces.add(new Piece(PlayerType.WHITE, PieceType.PAWN, 3, 2));
+        player2Pieces.add(new Piece(PlayerType.WHITE, PieceType.PAWN, 4, 2));
+        player2Pieces.add(new Piece(PlayerType.WHITE, PieceType.PAWN, 5, 2));
+        player2Pieces.add(new Piece(PlayerType.WHITE, PieceType.PAWN, 6, 2));
+        player2Pieces.add(new Piece(PlayerType.WHITE, PieceType.PAWN, 7, 2));
+        player2Pieces.add(new Piece(PlayerType.WHITE, PieceType.PAWN, 8, 2));
+        player2Pieces.add(new Piece(PlayerType.WHITE, PieceType.ROOK, 1, 1));
+        player2Pieces.add(new Piece(PlayerType.WHITE, PieceType.BISHOP, 7, 1));
+        player2Pieces.add(new Piece(PlayerType.WHITE, PieceType.LANCE, 0, 0));
+        player2Pieces.add(new Piece(PlayerType.WHITE, PieceType.LANCE, 8, 0));
+        player2Pieces.add(new Piece(PlayerType.WHITE, PieceType.KNIGHT, 1, 0));
+        player2Pieces.add(new Piece(PlayerType.WHITE, PieceType.KNIGHT, 7, 0));
+        player2Pieces.add(new Piece(PlayerType.WHITE, PieceType.SILVERGENERAL, 6, 0));
+        player2Pieces.add(new Piece(PlayerType.WHITE, PieceType.SILVERGENERAL, 2, 0));
+        player2Pieces.add(new Piece(PlayerType.WHITE, PieceType.GOLDGENERAL, 5, 0));
+        player2Pieces.add(new Piece(PlayerType.WHITE, PieceType.GOLDGENERAL, 3, 0));
+        player2Pieces.add(new Piece(PlayerType.WHITE, PieceType.KING, 4, 0));
+
+        player1Pieces.add(new Piece(PlayerType.BLACK, PieceType.PAWN, 0, 6));
+        player1Pieces.add(new Piece(PlayerType.BLACK, PieceType.PAWN, 1, 6));
+        player1Pieces.add(new Piece(PlayerType.BLACK, PieceType.PAWN, 2, 6));
+        player1Pieces.add(new Piece(PlayerType.BLACK, PieceType.PAWN, 3, 6));
+        player1Pieces.add(new Piece(PlayerType.BLACK, PieceType.PAWN, 4, 6));
+        player1Pieces.add(new Piece(PlayerType.BLACK, PieceType.PAWN, 5, 6));
+        player1Pieces.add(new Piece(PlayerType.BLACK, PieceType.PAWN, 6, 6));
+        player1Pieces.add(new Piece(PlayerType.BLACK, PieceType.PAWN, 7, 6));
+        player1Pieces.add(new Piece(PlayerType.BLACK, PieceType.PAWN, 8, 6));
+        player1Pieces.add(new Piece(PlayerType.BLACK, PieceType.ROOK, 7, 7));
+        player1Pieces.add(new Piece(PlayerType.BLACK, PieceType.BISHOP, 1, 7));
+        player1Pieces.add(new Piece(PlayerType.BLACK, PieceType.LANCE, 0, 8));
+        player1Pieces.add(new Piece(PlayerType.BLACK, PieceType.LANCE, 8, 8));
+        player1Pieces.add(new Piece(PlayerType.BLACK, PieceType.KNIGHT, 1, 8));
+        player1Pieces.add(new Piece(PlayerType.BLACK, PieceType.KNIGHT, 7, 8));
+        player1Pieces.add(new Piece(PlayerType.BLACK, PieceType.SILVERGENERAL, 6, 8));
+        player1Pieces.add(new Piece(PlayerType.BLACK, PieceType.SILVERGENERAL, 2, 8));
+        player1Pieces.add(new Piece(PlayerType.BLACK, PieceType.GOLDGENERAL, 5, 8));
+        player1Pieces.add(new Piece(PlayerType.BLACK, PieceType.GOLDGENERAL, 3, 8));
+        player1Pieces.add(new Piece(PlayerType.BLACK, PieceType.KING, 4, 8));
+    }
+
+    public void changeTurn() {
+        long currentTime = System.currentTimeMillis();
+        if (!gameStarted) {
+            gameStarted = true;
+            lastMoveTime = currentTime;
+        }
+
+        int elapsedTime = (int) (currentTime - lastMoveTime);
+        if (activePlayer == PlayerType.BLACK) {
+            player1Time -= elapsedTime;
+            activePlayer = PlayerType.WHITE;
+        } else {
+            player2Time -= elapsedTime;
+            activePlayer = PlayerType.BLACK;
+        }
+
+        lastMoveTime = currentTime;
+    }
+
+    public void updateEndGame() {
+        for (var piece : getPlayerPieces(activePlayer)) {
+            if (piece.getAvailableMoves().size() > 0) {
+                gameOver = false;
+                return;
+            }
+        }
+        for (var piece : getPlayerHand(activePlayer)) {
+            if (piece.getAvailableMoves().size() > 0) {
+                gameOver = false;
+                return;
+            }
+        }
+        // if all pieces have no moves
+        gameOver = true;
+    }
+
+    public void updateTimer() {
+        long currentTime = System.currentTimeMillis();
+        if (!gameStarted) {
+            gameStarted = true;
+            lastMoveTime = currentTime;
+        }
+
+        int elapsedTime = (int) (currentTime - lastMoveTime);
+        if (activePlayer == PlayerType.BLACK) {
+            player1Time -= elapsedTime;
+        } else {
+            player2Time -= elapsedTime;
+        }
     }
 
     public boolean makeMove(Move move) {
@@ -243,6 +360,54 @@ public class GameData {
 
     public void setGameId(int gameId) {
         this.gameId = gameId;
+    }
+
+    public GameData deepCopy() {
+        GameData copy = new GameData();
+
+        copy.activePlayer = this.activePlayer;
+        copy.gameOver = this.gameOver;
+        copy.player1Time = this.player1Time;
+        copy.player2Time = this.player2Time;
+        copy.gameId = this.gameId;
+        copy.gameStarted = this.gameStarted;
+        copy.lastMoveTime = this.lastMoveTime;
+
+        var p1p = new ArrayList<Piece>();
+        for (var piece : this.getPlayer1Pieces()) {
+            p1p.add(piece.deepCopy());
+
+        }
+        copy.setPlayer1Pieces(p1p);
+
+        var p2p = new ArrayList<Piece>();
+        for (var piece : this.getPlayer2Pieces()) {
+            p2p.add(piece.deepCopy());
+
+        }
+        copy.setPlayer2Pieces(p2p);
+
+        var p1h = new ArrayList<Piece>();
+        for (var piece : this.getPlayer1Hand()) {
+            p1h.add(piece.deepCopy());
+
+        }
+        copy.setPlayer1Hand(p1h);
+
+        var p2h = new ArrayList<Piece>();
+        for (var piece : this.getPlayer2Hand()) {
+            p2h.add(piece.deepCopy());
+
+        }
+        copy.setPlayer2Hand(p2h);
+
+        var ml = new ArrayList<Move>();
+        for (var move : this.getMoveList()) {
+            ml.add(move.deepCopy());
+        }
+        copy.setMoveList(ml);
+
+        return copy;
     }
 
 }

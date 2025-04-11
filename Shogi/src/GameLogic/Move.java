@@ -21,6 +21,12 @@ public class Move {
         endLocation = new PieceLocation(end.getxPos(), end.getyPos(), end.getPlayer());
     }
 
+    public Move deepCopy() {
+        var copy = new Move(this.pieceType, this.startLocation, this.endLocation);
+        return copy;
+
+    }
+
     public PlayerType getPlayer() {
         return player;
     }

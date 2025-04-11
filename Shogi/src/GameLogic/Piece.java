@@ -37,6 +37,19 @@ public class Piece {
         availableMoves = new ArrayList<>();
     }
 
+    public Piece deepCopy() {
+        Piece copy = new Piece(this.player, this.pieceType, this.location);
+        copy.setPromoted(this.isPromoted());
+        copy.setOnBoard(this.isOnBoard());
+        var list = new ArrayList<PieceLocation>();
+        for (var move : availableMoves) {
+            list.add(new PieceLocation(move));
+        }
+        copy.setAvailableMoves(list);
+
+        return copy;
+    }
+
     public boolean isOnBoard() {
         return onBoard;
     }
