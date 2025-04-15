@@ -370,6 +370,7 @@ public class GamePanel extends JPanel {
 		for (int row = 0; row < 9; row++) {
 			for (int col = 0; col < 9; col++) { 
 				boardGrid[col][row].setIcon(null);
+				objectBoard[col][row] = null;
 			}
 		}
 	}
@@ -508,6 +509,18 @@ public class GamePanel extends JPanel {
 			counter++;
 		}
 		
+	}
+	
+	public int PromptPromotion(Piece piece) {
+		
+		//generate the key for the image HashMap
+		String key = "" + piece.getPlayer() + piece.getPieceType() + true;
+		ImageIcon icon = pieceImages.get(key);
+		
+		//prompt the user if they want to promote
+		int result = JOptionPane.showConfirmDialog(this, "Would you like to promote your " + piece.getPieceType() + "?", "Promotion", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, icon);
+		
+		return result;
 	}
 	
 	

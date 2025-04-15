@@ -54,14 +54,46 @@ public class GameControl implements MouseListener, ActionListener {
 		        JLabel selectedSquare = boardGrid[col][row];
 		        
 		        //Check to see if a move was selected
-		        if (selectedSquare.getBackground().equals(Color.decode(GamePanel.BOARD_COLOR)) ) {
+		        if (!selectedSquare.getBackground().equals(Color.decode(GamePanel.VALID_MOVE_COLOR)) ) {
 		        	//NO MOVE WAS SELECTED
 		        } else  {
 		        	//A VALID MOVE WAS SELECTED
-		        	//move the selected piece to the new valid location
-		        	if (gd.makeMove(new Move(selectedPiece, new PieceLocation(col, row, selectedPiece.getPlayer())))) {
 		        	
-		        		System.out.println("Move Successful");
+		        	//if the selected move is in the promotion zone
+		        	if (((selectedPiece.getPlayer() == PlayerType.BLACK && row < 3) || (selectedPiece.getPlayer() == PlayerType.BLACK && selectedPiece.getLocation().getyPos() < 3) || (selectedPiece.getPlayer() == PlayerType.WHITE && row > 5) || (selectedPiece.getPlayer() == PlayerType.WHITE && selectedPiece.getLocation().getyPos() > 5)) && selectedPiece.isOnBoard() && !selectedPiece.isPromoted()) {
+		        		
+		        		
+		        		//check for Forced Promotions
+		        		if ((selectedPiece.getPieceType() == PieceType.PAWN || selectedPiece.getPieceType() == PieceType.LANCE) && (row == 0 || row == 8)) {
+		        			//if a pawn or lance is placed on the final row (no more moves left if not promoted)
+		        			if ((selectedPiece.getPlayer() == PlayerType.BLACK && row == 0) || (selectedPiece.getPlayer() == PlayerType.WHITE && row == 8)) {
+			        			System.out.println("FORCED PROMOTION OF LANCE/PAWN");
+			        			selectedPiece.setPromoted(true);
+		        			}
+		        			
+		        		} else if (selectedPiece.getPieceType() == PieceType.KNIGHT && (row < 2 || row > 6)) {
+		        			//if a Knight moves to the last 2 rows (no more moves left if not promoted)
+		        			if ((selectedPiece.getPlayer() == PlayerType.BLACK && row < 2) || (selectedPiece.getPlayer() == PlayerType.WHITE && row > 6) ) {
+		        				System.out.println("FORCED PROMOTION OF KNIGHT");
+		        				selectedPiece.setPromoted(true);
+		        			}
+		        		} else {
+		        			//prompt the user if they want to promote
+			        		int result = gp.PromptPromotion(selectedPiece);
+			        		if (result == JOptionPane.YES_OPTION) {
+			        			//The user chose to promote
+			                    selectedPiece.setPromoted(true);
+			                } else {
+			                	//The user chose not to Promote
+			                }
+		        		}
+		        		
+		        	}
+		        	
+		        	//move the selected piece to the new valid location
+		        	if (!gd.makeMove(new Move(selectedPiece, new PieceLocation(col, row, selectedPiece.getPlayer())))) {
+		        		System.out.println("ERROR: unable to move piece");
+		        	
 		        	}
 		        	
 		        	

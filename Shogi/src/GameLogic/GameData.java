@@ -146,10 +146,9 @@ public class GameData {
         }
 
         Piece movePiece = null;
-        
         ArrayList<Piece> playerHand = getPlayerHand(activePlayer);
         //if the piece is NOT on the board
-        if (move.getStartLocation().equals(new PieceLocation(-1, -1, activePlayer))) {
+        if (move.getStartLocation().getxPos() == -1 && move.getStartLocation().getyPos() == -1) {
         	//select the first piece in hand of the same type
         	for (Piece piece : playerHand) {
         		if (piece.getPieceType() == move.getPieceType() && !piece.isOnBoard()) {
