@@ -17,7 +17,7 @@ public class Move {
         this.player = piece.getPlayer();
         this.pieceType = piece.getPieceType();
         startLocation = new PieceLocation(piece.getLocation().getxPos(), piece.getLocation().getyPos(),
-                piece.getLocation().getPlayer());
+                piece.getPlayer());
         endLocation = new PieceLocation(end.getxPos(), end.getyPos(), end.getPlayer());
     }
 

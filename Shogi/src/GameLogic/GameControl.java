@@ -6,7 +6,7 @@ import java.awt.event.*;
 import javax.swing.*;
 
 
-public class GameControl implements MouseListener {
+public class GameControl implements MouseListener, ActionListener {
 	
 	private Piece selectedPiece;
 	
@@ -66,12 +66,27 @@ public class GameControl implements MouseListener {
 		        	
 		        	
 		        	//Clear and update the board (REMOVE ONCE SERVER INTEGRATION IS IMPLEMENTED)
-		        	gp.clearEntireBoard();
-		        	gp.updateBoard(gd);
+		        	//gp.clearEntireBoard();
+		        	//gp.updateGamePanel(gd);
 		        	
 		        	
 		        	//SEND UPDATE TO SERVER
 		        	//send the updated gameData object to the server
+		        	
+		        	
+		        	//Simulate the server sending back a new UPDATED GameData object
+		        	gd.changeTurn();
+		        	MoveCalculator mc = new MoveCalculator();
+		        	mc.calculateAvailableMoves(gd);
+		        	
+		        	setGameData(gd);
+		        	gp.setGameData(gd);
+		        	
+		        	
+		        	
+		        	//update again type beat
+		        	gp.clearEntireBoard();
+		        	gp.updateGamePanel(gd);
 		        	
 		        	
 		        	//leave this block
@@ -80,12 +95,12 @@ public class GameControl implements MouseListener {
 		        
 		        //set the new selected piece
 		        selectedPiece = objectGrid[col][row];
-		        	
+		        
 				//Clear the board of moves
 				gp.clearValidMoves();
 		        
-		        //check if there is a piece
-		        if (selectedPiece != null) {
+		        //check if there is a piece and it is controlled (owned) by the active player
+		        if (selectedPiece != null && selectedPiece.getPlayer().equals(gd.getActivePlayer())) {
 		        	//show the available moves of the selected piece on the board
 		        	gp.showValidMoves(selectedPiece);
 		        	
@@ -107,37 +122,7 @@ public class GameControl implements MouseListener {
 				
 	}
 	
-	private void handleInventoryClick(MouseEvent e, PlayerType player) {
-		//set the game data
-    	gd = gp.getGameData();
-		//Get the piece row on the inventory
-        int y = e.getY();
-        int row = y / GamePanel.SQUARE_SIZE;
-		
-        PieceType type = gp.getInventoryPiece().get(row);
-        
-      //set the new selected piece
-        selectedPiece = null;
-        for (Piece piece : gd.getPlayerPieces(player)) {
-        	if (piece.getPieceType() == type && !piece.isOnBoard()) {
-        		selectedPiece = piece;
-        		break;
-        	}
-        }
-        
-		//Clear the board of moves
-		gp.clearValidMoves();
-        
-        //check if there is a piece
-        if (selectedPiece != null) {
-        	//show the available moves of the selected piece on the board
-        	gp.showValidMoves(selectedPiece);
-        } else {
-        	//IF THERE IS NOT A PIECE ON THE SQUARE
-        	
-        }
-        
-	}
+
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
@@ -155,6 +140,45 @@ public class GameControl implements MouseListener {
 	public void mouseExited(MouseEvent e) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	
+	private void handleInventoryClick(MouseEvent e, PlayerType player) {
+		//set the game data
+    	gd = gp.getGameData();
+		//Get the piece row on the inventory
+        int y = e.getY();
+        int row = y / GamePanel.SQUARE_SIZE;
+		
+        PieceType type = gp.getInventoryPiece().get(row);
+        
+      //set the new selected piece
+        selectedPiece = null;
+        for (Piece piece : gd.getPlayerHand(player)) {
+        	if (piece.getPieceType() == type && !piece.isOnBoard()) {
+        		selectedPiece = piece;
+        		break;
+        	}
+        }
+        
+		//Clear the board of moves
+		gp.clearValidMoves();
+        
+        //check if there is a piece
+        if (selectedPiece != null && selectedPiece.getPlayer().equals(gd.getActivePlayer())) {
+        	//show the available moves of the selected piece on the board
+        	gp.showValidMoves(selectedPiece);
+        } else {
+        	//IF THERE IS NOT A PIECE ON THE SQUARE
+        	
+        }
+        
 	}
 
 }

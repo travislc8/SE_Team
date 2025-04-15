@@ -145,7 +145,25 @@ public class GameData {
             throw new IllegalStateException("Move player must be the same as the active player");
         }
 
-        Piece movePiece = getPieceAt(move.getStartLocation());
+        Piece movePiece = null;
+        
+        ArrayList<Piece> playerHand = getPlayerHand(activePlayer);
+        //if the piece is NOT on the board
+        if (move.getStartLocation().equals(new PieceLocation(-1, -1, activePlayer))) {
+        	//select the first piece in hand of the same type
+        	for (Piece piece : playerHand) {
+        		if (piece.getPieceType() == move.getPieceType() && !piece.isOnBoard()) {
+        			movePiece = piece;
+        			break;
+        		}
+        	}
+        	
+        } else {
+        	//if the piece IS on the board
+        	movePiece = getPieceAt(move.getStartLocation());
+        }
+        
+        
 
         if (movePiece == null) {
             return false;
@@ -173,8 +191,14 @@ public class GameData {
             getPlayerHand(activePlayer).add(opPiece);
         }
 
+        
         // move piece
         movePiece.setLocation(move.getEndLocation());
+        if (!movePiece.isOnBoard()) {
+        	movePiece.setOnBoard(true);
+			getPlayerHand(activePlayer).remove(movePiece);
+			getPlayerPieces(activePlayer).add(movePiece);
+        }
 
         return true;
     }

@@ -85,6 +85,9 @@ public class GamePanel extends JPanel {
 	}
 	
 	
+	public void setGameData(GameData gd) {
+		this.gd = gd;
+	}
 	
 	public void setControlPlayer(PlayerType controlPlayer) {
 		this.controlPlayer = controlPlayer;
@@ -460,12 +463,12 @@ public class GamePanel extends JPanel {
 	public void updateInventories(GameData gd) {
 		
 		//get the black player's pieces /\ (up)
-		ArrayList<Piece> blackPieces = gd.getPlayerPieces(PlayerType.BLACK);
+		ArrayList<Piece> blackPieces = gd.getPlayerHand(PlayerType.BLACK);
 		//update the black inventory
 		updateInventory(blackInventory, blackPieces);
 		
 		//get the white player's pieces \/ (down)
-		ArrayList<Piece> whitePieces = gd.getPlayerPieces(PlayerType.WHITE);
+		ArrayList<Piece> whitePieces = gd.getPlayerHand(PlayerType.WHITE);
 		//update the white inventory
 		updateInventory(whiteInventory, whitePieces);
 		
