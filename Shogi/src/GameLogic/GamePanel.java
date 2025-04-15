@@ -19,19 +19,31 @@ public class GamePanel extends JPanel {
 	private JLabel[] blackInventory;
 	private ArrayList<Piece> objectBlackInventory;
 	
-	static String BOARD_COLOR = "#A1662F";
-	static String VALID_MOVE_COLOR = "#66EE66";
+	
+
 	
 
 	private JPanel boardPanel; //Panel that will contain the board
 	private JPanel whiteInventoryPanel; //Panel that will contain the white player's inventory
 	private JPanel blackInventoryPanel; //Panel that will contain the black player's inventory
-	private JPanel timerPanel; //panel that will contain the timers for both players
+	private JLabel whiteTimer; //JLabel for the white player's timer
+	private JLabel blackTimer; //JLabel for the black player's timer
+	private JButton forfeitButton; //button to allow users to forfeit a game
+	private JButton offerDrawButton; //button to allow users to offer a draw to their opponent
 	
+	//Constants for changing visuals of game
+	//FRAME SIZING
+	static int FRAME_HEIGHT = 750; //MIN = 700 RECOMMENDED = 750
+	static int FRAME_WIDTH = 1000; //MIN = 850 RECOMMENDED = 1000
+	static int BOARD_PADDING = 20;
 	
+	//COLORS
+	static String BOARD_COLOR = "#A1662F";
+	static String VALID_MOVE_COLOR = "#66EE66";
 	//FONTS
 	private Font timerFont = new Font("Serif", Font.BOLD, 60);
 	private Font inventoryFont = new Font("", Font.BOLD, 20);
+	private Font buttonFont = new Font("Serif", Font.BOLD, 20);
 	
 	
 	private HashMap<String, ImageIcon> pieceImages;
@@ -60,9 +72,7 @@ public class GamePanel extends JPanel {
 		
 		//instantiate and fill the pieceImagesArrayList
 		pieceImages = new HashMap<>();
-		
 		CreatePieceImagesHashMap();
-		
 		
 		//Create the panel to hold the board
 		boardGrid = new JLabel[9][9];
@@ -70,7 +80,6 @@ public class GamePanel extends JPanel {
 		
 		boardPanel = new JPanel(new GridLayout(9,9));
 		boardPanel.addMouseListener(gc);
-		
 		
 		for (int row = 0; row < 9; row++) {
 			for (int col = 0; col < 9; col++) { 
@@ -133,32 +142,64 @@ public class GamePanel extends JPanel {
 		}
 		
 		
-		//CREATE THE TIMER PANEL
-		timerPanel = new JPanel();
-		JLabel blackPlayerTimer = new JLabel("2:00");
-		blackPlayerTimer.setFont(timerFont);
-		blackPlayerTimer.setBorder(new LineBorder(Color.BLACK));
-		blackPlayerTimer.setBackground(Color.DARK_GRAY);
-		
-		
-		JLabel whitePlayerTimer = new JLabel("2:00");
-		whitePlayerTimer.setFont(timerFont);
-		whitePlayerTimer.setBorder(new LineBorder(Color.BLACK));
-		whitePlayerTimer.setBackground(Color.DARK_GRAY);
-		
-		
-		timerPanel.add(blackPlayerTimer);
-		timerPanel.add(whitePlayerTimer);
+		//CREATE THE TIMER LABELS
+		//	black
+		blackTimer = new JLabel("2:00");
+		blackTimer.setFont(timerFont);
+		blackTimer.setBorder(new LineBorder(Color.BLACK));
+		blackTimer.setBackground(Color.DARK_GRAY);
+		//	white
+		whiteTimer = new JLabel("2:00");
+		whiteTimer.setFont(timerFont);
+		whiteTimer.setBorder(new LineBorder(Color.BLACK));
+		whiteTimer.setBackground(Color.DARK_GRAY);
 
 		
-		boardPanel.setPreferredSize(new Dimension(585, 585));
-		boardPanel.setMaximumSize(new Dimension(585, 585));
+		//CREATE THE USER BUTTONS (forfeit and offer draw)
+		forfeitButton = new JButton("Forfeit");
+		forfeitButton.setFont(buttonFont);
+		forfeitButton.setPreferredSize(new Dimension(100, 50));
 		
+		offerDrawButton = new JButton("Offer Draw");
+		offerDrawButton.setFont(buttonFont);
+		offerDrawButton.setPreferredSize(new Dimension(150, 50));
+		
+		
+		boardPanel.setPreferredSize(new Dimension(585, 585));
+		
+		this.setLayout(null);
+		
+		this.add(boardPanel);
+		
+		Dimension boardSize = boardPanel.getPreferredSize();
+		int boardX = (FRAME_WIDTH/2) - (boardSize.width/2);
+		int boardY = BOARD_PADDING;
+		boardPanel.setBounds(boardX, boardY, boardSize.width, boardSize.height);
 		
 		this.add(whiteInventoryPanel);
-		this.add(boardPanel);
+		Dimension size = whiteInventoryPanel.getPreferredSize();
+		whiteInventoryPanel.setBounds(boardX - (size.width + BOARD_PADDING), boardY, size.width, size.height);
+		
 		this.add(blackInventoryPanel);
-		this.add(timerPanel);
+		size = blackInventoryPanel.getPreferredSize();
+		blackInventoryPanel.setBounds((boardX + boardSize.width) + (BOARD_PADDING), (boardY + (boardSize.height - size.height)), size.width, size.height);
+		
+		this.add(whiteTimer);
+		size = whiteTimer.getPreferredSize();
+		whiteTimer.setBounds((boardX + boardSize.width) + (BOARD_PADDING), boardY, size.width, size.height);
+		
+		this.add(blackTimer);
+		size = blackTimer.getPreferredSize();
+		blackTimer.setBounds(boardX - (size.width + BOARD_PADDING), boardY + (boardSize.height - size.height), size.width, size.height);
+		
+		this.add(forfeitButton);
+		size = forfeitButton.getPreferredSize();
+		forfeitButton.setBounds(boardX, (boardY + boardSize.height) + BOARD_PADDING, size.width, size.height);
+		
+		this.add(offerDrawButton);
+		size = offerDrawButton.getPreferredSize();
+		offerDrawButton.setBounds(boardX + (boardSize.width - size.width), (boardY + boardSize.height) + BOARD_PADDING, size.width, size.height);
+		
 		
 		//give the control a reference to this Panel
 		gc.setGamePanel(this);
