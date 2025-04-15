@@ -19,10 +19,6 @@ public class GamePanel extends JPanel {
 	private JLabel[] blackInventory;
 	private ArrayList<Piece> objectBlackInventory;
 	
-	
-
-	
-
 	private JPanel boardPanel; //Panel that will contain the board
 	private JPanel whiteInventoryPanel; //Panel that will contain the white player's inventory
 	private JPanel blackInventoryPanel; //Panel that will contain the black player's inventory
@@ -31,23 +27,31 @@ public class GamePanel extends JPanel {
 	private JButton forfeitButton; //button to allow users to forfeit a game
 	private JButton offerDrawButton; //button to allow users to offer a draw to their opponent
 	
+	private PlayerType controlPlayer; //Variable to represent the player that is controlling this GUI
+	
+	
 	//Constants for changing visuals of game
 	//FRAME SIZING
 	static int FRAME_HEIGHT = 750; //MIN = 700 RECOMMENDED = 750
 	static int FRAME_WIDTH = 1000; //MIN = 850 RECOMMENDED = 1000
 	static int BOARD_PADDING = 20;
+	static int SQUARE_SIZE = 65;
 	
 	//COLORS
 	static String BOARD_COLOR = "#A1662F";
 	static String VALID_MOVE_COLOR = "#66EE66";
+	static String SELECTED_PIECE_COLOR = "#006400";
 	//FONTS
 	private Font timerFont = new Font("Serif", Font.BOLD, 60);
 	private Font inventoryFont = new Font("", Font.BOLD, 20);
 	private Font buttonFont = new Font("Serif", Font.BOLD, 20);
 	
 	
-	private HashMap<String, ImageIcon> pieceImages;
+	private HashMap<String, ImageIcon> pieceImages; //HashMap that contains all of the images for every piece
+	private HashMap<PieceType, Integer> inventoryIndex; //HashMap that gives the index based on piece
+	private HashMap<Integer, PieceType> inventoryPiece; //HashMap that gives the piece based on index
 	
+	//GETTERS AND SETTERS
 	public GameData getGameData() {
 		return gd;
 	}
@@ -65,14 +69,41 @@ public class GamePanel extends JPanel {
 	}
 	
 	
+	public JPanel getWhiteInventoryPanel() {
+		return whiteInventoryPanel;
+	}
+	public JPanel getBlackInventoryPanel() {
+		return blackInventoryPanel;
+	}
+	
+	public HashMap<Integer, PieceType> getInventoryPiece() {
+		return inventoryPiece;
+	}
+	
+	public HashMap<PieceType, Integer> getInventoryIndex() {
+		return inventoryIndex;
+	}
+	
+	
+	
+	public void setControlPlayer(PlayerType controlPlayer) {
+		this.controlPlayer = controlPlayer;
+	}
+	
+	
 	
 	
 	
 	public GamePanel(GameControl gc) {
 		
-		//instantiate and fill the pieceImagesArrayList
+		//instantiate and fill the pieceImages HashMap
 		pieceImages = new HashMap<>();
 		CreatePieceImagesHashMap();
+		
+		//instantiate and fill the inventoryIndex HashMap
+		inventoryIndex = new HashMap<>();
+		inventoryPiece = new HashMap<>();
+		CreateInventoryHashMaps();
 		
 		//Create the panel to hold the board
 		boardGrid = new JLabel[9][9];
@@ -94,6 +125,7 @@ public class GamePanel extends JPanel {
 		
 		///CREATING THE BLACK INVENTORY
 		blackInventoryPanel = new JPanel(new GridLayout(7,1));
+		blackInventoryPanel.addMouseListener(gc);
 		blackInventory = new JLabel[7];
 		
 		int counter = 0;
@@ -108,7 +140,8 @@ public class GamePanel extends JPanel {
 			blackInventory[counter].setText("0");
 			blackInventory[counter].setHorizontalTextPosition(SwingConstants.RIGHT);
 			blackInventory[counter].setVerticalTextPosition(SwingConstants.BOTTOM);
-			blackInventory[counter].setFont(new Font("comic sans", Font.BOLD, 20));
+			blackInventory[counter].setFont(inventoryFont);
+			blackInventory[counter].setOpaque(true);
 			
 			
 			blackInventoryPanel.add(blackInventory[counter]);
@@ -119,6 +152,7 @@ public class GamePanel extends JPanel {
 		
 		///CREATING THE WHITE INVENTORY
 		whiteInventoryPanel = new JPanel(new GridLayout(7,1));
+		whiteInventoryPanel.addMouseListener(gc);
 		whiteInventory = new JLabel[7];
 		
 		counter = 0;
@@ -134,6 +168,7 @@ public class GamePanel extends JPanel {
 			whiteInventory[counter].setHorizontalTextPosition(SwingConstants.LEFT);
 			whiteInventory[counter].setVerticalTextPosition(SwingConstants.BOTTOM);
 			whiteInventory[counter].setFont(inventoryFont);
+			whiteInventory[counter].setOpaque(true);
 			
 			
 			whiteInventoryPanel.add(whiteInventory[counter]);
@@ -203,6 +238,24 @@ public class GamePanel extends JPanel {
 		
 		//give the control a reference to this Panel
 		gc.setGamePanel(this);
+	}
+	
+	private void CreateInventoryHashMaps() {
+		inventoryIndex.put(PieceType.ROOK, 0);
+		inventoryIndex.put(PieceType.BISHOP, 1);
+		inventoryIndex.put(PieceType.GOLDGENERAL, 2);
+		inventoryIndex.put(PieceType.SILVERGENERAL, 3);
+		inventoryIndex.put(PieceType.KNIGHT, 4);
+		inventoryIndex.put(PieceType.LANCE, 5);
+		inventoryIndex.put(PieceType.PAWN, 6);
+		
+		inventoryPiece.put(0, PieceType.ROOK);
+		inventoryPiece.put(1, PieceType.BISHOP);
+		inventoryPiece.put(2, PieceType.GOLDGENERAL);
+		inventoryPiece.put(3, PieceType.SILVERGENERAL);
+		inventoryPiece.put(4, PieceType.KNIGHT);
+		inventoryPiece.put(5, PieceType.LANCE);
+		inventoryPiece.put(6, PieceType.PAWN);
 	}
 	
 	private void CreatePieceImagesHashMap() {
@@ -287,20 +340,29 @@ public class GamePanel extends JPanel {
 		
 	}
 	
+	//clears the entire board empty of everything
 	public void clearEntireBoard() {
 		clearValidMoves();
 		clearPieces();
 	}
 	
+	//clears all of the valid move colors (and selected piece color) from the board
 	public void clearValidMoves() {
+		//clear board
 		for (int row = 0; row < 9; row++) {
 			for (int col = 0; col < 9; col++) { 
 				boardGrid[col][row].setText("");
 				boardGrid[col][row].setBackground(Color.decode(BOARD_COLOR));
 			}
 		}
+		//clear inventory
+		for (int row = 0; row < 7; row++) {
+			whiteInventory[row].setBackground(whiteInventoryPanel.getBackground());
+			blackInventory[row].setBackground(whiteInventoryPanel.getBackground());
+		}
 	}
 	
+	//clears all of the piece images from the board
 	public void clearPieces() {
 		for (int row = 0; row < 9; row++) {
 			for (int col = 0; col < 9; col++) { 
@@ -309,22 +371,53 @@ public class GamePanel extends JPanel {
 		}
 	}
 	
-	public void showValidMoves(ArrayList <PieceLocation> validSquares) {
+	//Changes the colors of the board squares to show the selected piece and its available moves
+	public void showValidMoves(Piece selectedPiece) {
 		
+		//change background color of selected piece
+		highlightPiece(selectedPiece);
+		
+		//change the color of the valid move squares
+		ArrayList <PieceLocation> validSquares = selectedPiece.getAvailableMoves();
 		for (PieceLocation square : validSquares) {
-			
+			//get the position of the square
 			int col = square.getxPos();
 			int row = square.getyPos();
-			
-			
+			//change visual color of square on the board
 			boardGrid[col][row].setBackground(Color.decode(VALID_MOVE_COLOR));
-			
-			
 		}
 		
 	}
 	
+	private void highlightPiece(Piece selectedPiece) {
+		
+		if (selectedPiece.isOnBoard()) {
+			//change background color of selected piece
+			PieceLocation location = selectedPiece.getLocation();
+			boardGrid[location.getxPos()][location.getyPos()].setBackground(Color.decode(SELECTED_PIECE_COLOR));
+			
+		} else {
+			
+			if (selectedPiece.getPlayer() == PlayerType.BLACK) {
+				
+				int index = inventoryIndex.get(selectedPiece.getPieceType());
+				
+				blackInventory[index].setBackground(Color.decode(SELECTED_PIECE_COLOR));
+				
+				
+			} else if (selectedPiece.getPlayer() == PlayerType.WHITE) {
+				
+				int index = inventoryIndex.get(selectedPiece.getPieceType());
+				
+				whiteInventory[index].setBackground(Color.decode(SELECTED_PIECE_COLOR));
+			}
+		}
+	}
 	
+	public void updateGamePanel(GameData gd) {
+		updateBoard(gd);
+		updateInventories(gd);
+	}
 	
 	public void updateBoard(GameData gd) {
 		
@@ -364,38 +457,53 @@ public class GamePanel extends JPanel {
 			
 	}
 	
-	public void updateInvetories(GameData gd) {
+	public void updateInventories(GameData gd) {
 		
 		//get the black player's pieces /\ (up)
 		ArrayList<Piece> blackPieces = gd.getPlayerPieces(PlayerType.BLACK);
+		//update the black inventory
+		updateInventory(blackInventory, blackPieces);
 		
 		//get the white player's pieces \/ (down)
 		ArrayList<Piece> whitePieces = gd.getPlayerPieces(PlayerType.WHITE);
+		//update the white inventory
+		updateInventory(whiteInventory, whitePieces);
 		
+	}
+	
+	
+	private void updateInventory(JLabel[] visualInventory, ArrayList<Piece> pieceList) {
 		
-		//loop through each black piece and add it to their inventory
-		for (Piece piece : blackPieces) {
+		//create counting structure
+		HashMap<PieceType, Integer> pieceCount = new HashMap<>();
+		
+		//loop through each piece, add it to the inventory, and count up totals
+		for (Piece piece : pieceList) {
 			
 			//skip pieces that are on the board
 			if (piece.isOnBoard()) continue;
 			
-			
-			
+			//increment the count of the pieceType
+			if (pieceCount.get(piece.getPieceType()) == null) {
+				pieceCount.put(piece.getPieceType(), 1);
+			} else {
+				pieceCount.put(piece.getPieceType(), (pieceCount.get(piece.getPieceType()) + 1));
+			}
 		}
 		
-		//loop through each white piece and add it to their inventory
-		for (Piece piece : whitePieces) {
+		//Update the number display of the visualInventory
+		int counter = 0;
+		for (PieceType type : PieceType.values()) {
+			//skip the king
+			if (type.equals(PieceType.KING)) continue;
 			
-			//skip pieces that are on the board
-			if (piece.isOnBoard()) continue;
+			//update the text
+			if (pieceCount.get(type) == null) visualInventory[counter].setText("0");
+			else visualInventory[counter].setText(Integer.toString(pieceCount.get(type)));
 			
-			
-			
+			//increment counter
+			counter++;
 		}
-		
-		
-		
-		
 		
 	}
 	

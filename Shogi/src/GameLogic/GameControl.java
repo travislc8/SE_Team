@@ -7,9 +7,6 @@ import javax.swing.*;
 
 
 public class GameControl implements MouseListener {
-
-
-	private int SQUARE_SIZE = 65;
 	
 	private Piece selectedPiece;
 	
@@ -32,7 +29,6 @@ public class GameControl implements MouseListener {
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-		// TODO Auto-generated method stub
 		
 		//get the panel that was clicked
 			JPanel clickedPanel = (JPanel) e.getSource();
@@ -40,42 +36,44 @@ public class GameControl implements MouseListener {
 			
 			//DETERMINE WHICH PANEL WAS CLICKED
 			
-
-			//IF THE BOARD WAS CLICKED
 			if (clickedPanel.equals(gp.getBoardPanel())) {
+				//IF THE BOARD WAS CLICKED
+				//set the game data
+	        	gd = gp.getGameData();
+	        	
 				//Get the coordinates on the board
 				int x = e.getX();
 		        int y = e.getY();
 
-		        int col = x / SQUARE_SIZE;
-		        int row = y / SQUARE_SIZE;
+		        int col = x / GamePanel.SQUARE_SIZE;
+		        int row = y / GamePanel.SQUARE_SIZE;
 		        
 		        Piece[][] objectGrid = gp.getObjectBoard();
 		        JLabel[][] boardGrid = gp.getBoardGrid();
 		        
 		        JLabel selectedSquare = boardGrid[col][row];
 		        
-		        //IN FINAL CODE, MAKE SURE YOU CHECK FOR MOVES BEFORE PIECE SELECTION
-		        if (selectedSquare.getBackground().equals(Color.decode(gp.BOARD_COLOR)) ) {
-		        	
+		        //Check to see if a move was selected
+		        if (selectedSquare.getBackground().equals(Color.decode(GamePanel.BOARD_COLOR)) ) {
 		        	//NO MOVE WAS SELECTED
-		        	
-		        	System.out.println("Non move clicked");
-		        	
 		        } else  {
-		        	
 		        	//A VALID MOVE WAS SELECTED
 		        	//move the selected piece to the new valid location
+		        	if (gd.makeMove(new Move(selectedPiece, new PieceLocation(col, row, selectedPiece.getPlayer())))) {
 		        	
-		        	//PLACEHOLDER CODE UNTIL Move CLASS IS IMPLEMENTED
-		        	selectedPiece.setLocation(new PieceLocation(col, row, selectedPiece.getPlayer())); 
-		        	//PLACEHOLDER
+		        		System.out.println("Move Successful");
+		        	}
 		        	
 		        	
-		        	System.out.println("Move Selected");
-		        	
+		        	//Clear and update the board (REMOVE ONCE SERVER INTEGRATION IS IMPLEMENTED)
 		        	gp.clearEntireBoard();
 		        	gp.updateBoard(gd);
+		        	
+		        	
+		        	//SEND UPDATE TO SERVER
+		        	//send the updated gameData object to the server
+		        	
+		        	
 		        	//leave this block
 		        	return;
 		        }
@@ -88,19 +86,57 @@ public class GameControl implements MouseListener {
 		        
 		        //check if there is a piece
 		        if (selectedPiece != null) {
-		        	
-		        	//set the game data
-		        	gd = gp.getGameData();
 		        	//show the available moves of the selected piece on the board
-		        	gp.showValidMoves(selectedPiece.getAvailableMoves());
+		        	gp.showValidMoves(selectedPiece);
 		        	
 		        } else {
 		        	//IF THERE IS NOT A PIECE ON THE SQUARE
 		        	
 		        }
 		        
+			} else if (clickedPanel.equals(gp.getWhiteInventoryPanel())) {
+				//IF THE WHITE INVENTORY WAS CLICKED
+				handleInventoryClick(e, PlayerType.WHITE);
+				
+			} else if (clickedPanel.equals(gp.getBlackInventoryPanel())) {
+				//IF THE BLACK INVENTORY WAS CLICKED
+				handleInventoryClick(e, PlayerType.BLACK);
+				
+				
 			}
 				
+	}
+	
+	private void handleInventoryClick(MouseEvent e, PlayerType player) {
+		//set the game data
+    	gd = gp.getGameData();
+		//Get the piece row on the inventory
+        int y = e.getY();
+        int row = y / GamePanel.SQUARE_SIZE;
+		
+        PieceType type = gp.getInventoryPiece().get(row);
+        
+      //set the new selected piece
+        selectedPiece = null;
+        for (Piece piece : gd.getPlayerPieces(player)) {
+        	if (piece.getPieceType() == type && !piece.isOnBoard()) {
+        		selectedPiece = piece;
+        		break;
+        	}
+        }
+        
+		//Clear the board of moves
+		gp.clearValidMoves();
+        
+        //check if there is a piece
+        if (selectedPiece != null) {
+        	//show the available moves of the selected piece on the board
+        	gp.showValidMoves(selectedPiece);
+        } else {
+        	//IF THERE IS NOT A PIECE ON THE SQUARE
+        	
+        }
+        
 	}
 
 	@Override
