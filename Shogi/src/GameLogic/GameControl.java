@@ -19,6 +19,7 @@ public class GameControl implements MouseListener, ActionListener {
 	
 	public void setGameData(GameData gd) {
 		this.gd = gd;
+		gp.setGameData(gd);
 	}
 	
 	@Override
@@ -60,7 +61,7 @@ public class GameControl implements MouseListener, ActionListener {
 		        	//A VALID MOVE WAS SELECTED
 		        	
 		        	//if the selected move is in the promotion zone
-		        	if (((selectedPiece.getPlayer() == PlayerType.BLACK && row < 3) || (selectedPiece.getPlayer() == PlayerType.BLACK && selectedPiece.getLocation().getyPos() < 3) || (selectedPiece.getPlayer() == PlayerType.WHITE && row > 5) || (selectedPiece.getPlayer() == PlayerType.WHITE && selectedPiece.getLocation().getyPos() > 5)) && selectedPiece.isOnBoard() && !selectedPiece.isPromoted()) {
+		        	if (((selectedPiece.getPlayer() == PlayerType.BLACK && row < 3) || (selectedPiece.getPlayer() == PlayerType.BLACK && selectedPiece.getLocation().getyPos() < 3) || (selectedPiece.getPlayer() == PlayerType.WHITE && row > 5) || (selectedPiece.getPlayer() == PlayerType.WHITE && selectedPiece.getLocation().getyPos() > 5)) && selectedPiece.isOnBoard() && !selectedPiece.isPromoted() && selectedPiece.getPieceType() != PieceType.GOLDGENERAL && selectedPiece.getPieceType() != PieceType.KING) {
 		        		
 		        		
 		        		//check for Forced Promotions
@@ -96,9 +97,9 @@ public class GameControl implements MouseListener, ActionListener {
 		        	
 		        	}
 		        	
-		        	
+		        	gp.stopLocalTimer();
 		        	//Clear and update the board (REMOVE ONCE SERVER INTEGRATION IS IMPLEMENTED)
-		        	//gp.clearEntireBoard();
+		        	gp.clearEntireBoard();
 		        	//gp.updateGamePanel(gd);
 		        	
 		        	
@@ -112,13 +113,10 @@ public class GameControl implements MouseListener, ActionListener {
 		        	mc.calculateAvailableMoves(gd);
 		        	
 		        	setGameData(gd);
-		        	gp.setGameData(gd);
-		        	
-		        	
 		        	
 		        	//update again type beat
 		        	gp.clearEntireBoard();
-		        	gp.updateGamePanel(gd);
+		        	gp.updateGamePanel();
 		        	
 		        	
 		        	//leave this block
@@ -193,7 +191,7 @@ public class GameControl implements MouseListener, ActionListener {
       //set the new selected piece
         selectedPiece = null;
         for (Piece piece : gd.getPlayerHand(player)) {
-        	if (piece.getPieceType() == type && !piece.isOnBoard()) {
+        	if (piece.getPieceType() == type) {
         		selectedPiece = piece;
         		break;
         	}
@@ -211,6 +209,10 @@ public class GameControl implements MouseListener, ActionListener {
         	
         }
         
+	}
+	
+	public void startGame() {
+		gp.startGame();
 	}
 
 }

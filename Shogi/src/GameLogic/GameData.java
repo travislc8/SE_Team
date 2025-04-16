@@ -97,6 +97,7 @@ public class GameData {
         }
 
         int elapsedTime = (int) (currentTime - lastMoveTime);
+        elapsedTime = (int)elapsedTime/1000;
         if (activePlayer == PlayerType.BLACK) {
             player1Time -= elapsedTime;
             activePlayer = PlayerType.WHITE;

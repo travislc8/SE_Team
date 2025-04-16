@@ -2,6 +2,8 @@ package GameLogic;
 
 import java.awt.*;
 import java.util.*;
+import java.util.Timer;
+
 import javax.swing.*;
 import javax.swing.border.*;
 
@@ -22,8 +24,15 @@ public class GamePanel extends JPanel {
 	private JPanel boardPanel; //Panel that will contain the board
 	private JPanel whiteInventoryPanel; //Panel that will contain the white player's inventory
 	private JPanel blackInventoryPanel; //Panel that will contain the black player's inventory
+	
 	private JLabel whiteTimer; //JLabel for the white player's timer
+	private int whiteTime; //local time variable to use for timer display
 	private JLabel blackTimer; //JLabel for the black player's timer
+	private int blackTime; //local time variable to use for timer display
+
+	private Timer localTimer; //timer utility used for visual count down
+	
+	
 	private JButton forfeitButton; //button to allow users to forfeit a game
 	private JButton offerDrawButton; //button to allow users to offer a draw to their opponent
 	
@@ -166,7 +175,7 @@ public class GamePanel extends JPanel {
 			
 			whiteInventory[counter] = new JLabel();
 			whiteInventory[counter].setIcon(pieceImages.get("WHITE" + type + "false"));
-			whiteInventory[counter].setHorizontalAlignment(SwingConstants.LEFT);
+			whiteInventory[counter].setHorizontalAlignment(SwingConstants.RIGHT);
 			whiteInventory[counter].setText("0");
 			whiteInventory[counter].setHorizontalTextPosition(SwingConstants.LEFT);
 			whiteInventory[counter].setVerticalTextPosition(SwingConstants.BOTTOM);
@@ -182,12 +191,12 @@ public class GamePanel extends JPanel {
 		
 		//CREATE THE TIMER LABELS
 		//	black
-		blackTimer = new JLabel("2:00");
+		blackTimer = new JLabel("5:00");
 		blackTimer.setFont(timerFont);
 		blackTimer.setBorder(new LineBorder(Color.BLACK));
 		blackTimer.setBackground(Color.DARK_GRAY);
 		//	white
-		whiteTimer = new JLabel("2:00");
+		whiteTimer = new JLabel("5:00");
 		whiteTimer.setFont(timerFont);
 		whiteTimer.setBorder(new LineBorder(Color.BLACK));
 		whiteTimer.setBackground(Color.DARK_GRAY);
@@ -216,11 +225,11 @@ public class GamePanel extends JPanel {
 		
 		this.add(whiteInventoryPanel);
 		Dimension size = whiteInventoryPanel.getPreferredSize();
-		whiteInventoryPanel.setBounds(boardX - (size.width + BOARD_PADDING), boardY, size.width, size.height);
+		whiteInventoryPanel.setBounds(boardX - (size.width + BOARD_PADDING) - 15, boardY, size.width + 15, size.height);
 		
 		this.add(blackInventoryPanel);
 		size = blackInventoryPanel.getPreferredSize();
-		blackInventoryPanel.setBounds((boardX + boardSize.width) + (BOARD_PADDING), (boardY + (boardSize.height - size.height)), size.width, size.height);
+		blackInventoryPanel.setBounds((boardX + boardSize.width) + (BOARD_PADDING), (boardY + (boardSize.height - size.height)), size.width + 15, size.height);
 		
 		this.add(whiteTimer);
 		size = whiteTimer.getPreferredSize();
@@ -418,14 +427,95 @@ public class GamePanel extends JPanel {
 		}
 	}
 	
-	public void updateGamePanel(GameData gd) {
-		updateBoard(gd);
-		updateInventories(gd);
+	public void updateGamePanel() {
+		updateBoard();
+		updateInventories();
+		updateTimersServer();
 	}
 	
-	public void updateBoard(GameData gd) {
+	
+	
+	public void updateTimersServer() {
 		
-		this.gd = gd;
+		whiteTime = gd.getPlayer2Time();
+		int seconds = whiteTime % 60;
+		int minutes = whiteTime / 60;
+		
+		if (seconds < 10) {
+			whiteTimer.setText(Integer.toString(minutes) + ":0" + Integer.toString(seconds));
+		} else {
+			whiteTimer.setText(Integer.toString(minutes) + ":" + Integer.toString(seconds));
+		}
+		
+		
+		blackTime = gd.getPlayer1Time();
+		seconds = blackTime % 60;
+		minutes = blackTime / 60;
+		
+		if (seconds < 10) {
+			blackTimer.setText(Integer.toString(minutes) + ":0" + Integer.toString(seconds));
+		} else {
+			blackTimer.setText(Integer.toString(minutes) + ":" + Integer.toString(seconds));
+		}
+
+
+		
+	    
+		//start the local timer
+		if (gd.getActivePlayer() == PlayerType.BLACK) {
+			startLocalTimer("black", blackTimer);
+		} else {
+			startLocalTimer("white", whiteTimer);
+		}
+		
+	}
+	
+	public void startGame() {
+		//create timer
+		localTimer = new Timer();
+		updateBoard();
+	}
+
+    public void startLocalTimer(String color, JLabel timerPanel) {
+    	localTimer = new Timer();
+        TimerTask task = new TimerTask() {
+            @Override
+            public void run() {
+            	int totalSeconds;
+            	if (color == "white") totalSeconds = whiteTime;
+            	else totalSeconds = blackTime;
+                if (totalSeconds > 0) {
+                	int seconds = totalSeconds % 60;
+            		int minutes = totalSeconds / 60;
+            		
+            		if (seconds < 10) {
+            			timerPanel.setText(Integer.toString(minutes) + ":0" + Integer.toString(seconds));
+            		} else {
+            			timerPanel.setText(Integer.toString(minutes) + ":" + Integer.toString(seconds));
+            		}
+            		if (color == "white") whiteTime--;
+            		else blackTime--;
+            		
+                } else {
+                    System.out.println("Time's up!");
+                    localTimer.cancel();
+                }
+            }
+        };
+        
+        localTimer.scheduleAtFixedRate(task, 0, 1000); // Schedule the task to run every 1000ms (1 second)
+    }
+    
+    public void stopLocalTimer() {
+    	localTimer.cancel();
+    }
+	
+	
+	
+	
+	
+	
+	public void updateBoard() {
 		
 		//get the black player's pieces /\ (up)
 		ArrayList<Piece> blackPieces = gd.getPlayerPieces(PlayerType.BLACK);
@@ -442,9 +532,7 @@ public class GamePanel extends JPanel {
 		for (Piece piece : allPieces) {
 			
 			//skip pieces that are not on the board
-			if (!piece.isOnBoard()) {
-				continue;
-			}
+			//if (!piece.isOnBoard()) continue;
 			
 			//generate the key for the image HashMap
 			String key = "" + piece.getPlayer() + piece.getPieceType() + piece.isPromoted();
@@ -461,7 +549,7 @@ public class GamePanel extends JPanel {
 			
 	}
 	
-	public void updateInventories(GameData gd) {
+	public void updateInventories() {
 		
 		//get the black player's pieces /\ (up)
 		ArrayList<Piece> blackPieces = gd.getPlayerHand(PlayerType.BLACK);
@@ -485,7 +573,7 @@ public class GamePanel extends JPanel {
 		for (Piece piece : pieceList) {
 			
 			//skip pieces that are on the board
-			if (piece.isOnBoard()) continue;
+			//if (piece.isOnBoard()) continue;
 			
 			//increment the count of the pieceType
 			if (pieceCount.get(piece.getPieceType()) == null) {
