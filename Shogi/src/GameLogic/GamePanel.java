@@ -166,7 +166,7 @@ public class GamePanel extends JPanel {
 			
 			whiteInventory[counter] = new JLabel();
 			whiteInventory[counter].setIcon(pieceImages.get("WHITE" + type + "false"));
-			whiteInventory[counter].setHorizontalAlignment(SwingConstants.LEFT);
+			whiteInventory[counter].setHorizontalAlignment(SwingConstants.RIGHT);
 			whiteInventory[counter].setText("0");
 			whiteInventory[counter].setHorizontalTextPosition(SwingConstants.LEFT);
 			whiteInventory[counter].setVerticalTextPosition(SwingConstants.BOTTOM);
@@ -216,11 +216,11 @@ public class GamePanel extends JPanel {
 		
 		this.add(whiteInventoryPanel);
 		Dimension size = whiteInventoryPanel.getPreferredSize();
-		whiteInventoryPanel.setBounds(boardX - (size.width + BOARD_PADDING), boardY, size.width, size.height);
+		whiteInventoryPanel.setBounds(boardX - (size.width + BOARD_PADDING) - 15, boardY, size.width + 15, size.height);
 		
 		this.add(blackInventoryPanel);
 		size = blackInventoryPanel.getPreferredSize();
-		blackInventoryPanel.setBounds((boardX + boardSize.width) + (BOARD_PADDING), (boardY + (boardSize.height - size.height)), size.width, size.height);
+		blackInventoryPanel.setBounds((boardX + boardSize.width) + (BOARD_PADDING), (boardY + (boardSize.height - size.height)), size.width + 15, size.height);
 		
 		this.add(whiteTimer);
 		size = whiteTimer.getPreferredSize();
@@ -418,14 +418,12 @@ public class GamePanel extends JPanel {
 		}
 	}
 	
-	public void updateGamePanel(GameData gd) {
-		updateBoard(gd);
-		updateInventories(gd);
+	public void updateGamePanel() {
+		updateBoard();
+		updateInventories();
 	}
 	
-	public void updateBoard(GameData gd) {
-		
-		this.gd = gd;
+	public void updateBoard() {
 		
 		//get the black player's pieces /\ (up)
 		ArrayList<Piece> blackPieces = gd.getPlayerPieces(PlayerType.BLACK);
@@ -442,9 +440,7 @@ public class GamePanel extends JPanel {
 		for (Piece piece : allPieces) {
 			
 			//skip pieces that are not on the board
-			if (!piece.isOnBoard()) {
-				continue;
-			}
+			//if (!piece.isOnBoard()) continue;
 			
 			//generate the key for the image HashMap
 			String key = "" + piece.getPlayer() + piece.getPieceType() + piece.isPromoted();
@@ -461,7 +457,7 @@ public class GamePanel extends JPanel {
 			
 	}
 	
-	public void updateInventories(GameData gd) {
+	public void updateInventories() {
 		
 		//get the black player's pieces /\ (up)
 		ArrayList<Piece> blackPieces = gd.getPlayerHand(PlayerType.BLACK);
@@ -485,7 +481,7 @@ public class GamePanel extends JPanel {
 		for (Piece piece : pieceList) {
 			
 			//skip pieces that are on the board
-			if (piece.isOnBoard()) continue;
+			//if (piece.isOnBoard()) continue;
 			
 			//increment the count of the pieceType
 			if (pieceCount.get(piece.getPieceType()) == null) {
