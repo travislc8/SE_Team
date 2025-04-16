@@ -2,6 +2,8 @@ package GameLogic;
 
 import java.awt.*;
 import java.util.*;
+import java.util.Timer;
+
 import javax.swing.*;
 import javax.swing.border.*;
 
@@ -22,8 +24,15 @@ public class GamePanel extends JPanel {
 	private JPanel boardPanel; //Panel that will contain the board
 	private JPanel whiteInventoryPanel; //Panel that will contain the white player's inventory
 	private JPanel blackInventoryPanel; //Panel that will contain the black player's inventory
+	
 	private JLabel whiteTimer; //JLabel for the white player's timer
+	private int whiteTime; //local time variable to use for timer display
 	private JLabel blackTimer; //JLabel for the black player's timer
+	private int blackTime; //local time variable to use for timer display
+
+	private Timer localTimer; //timer utility used for visual count down
+	
+	
 	private JButton forfeitButton; //button to allow users to forfeit a game
 	private JButton offerDrawButton; //button to allow users to offer a draw to their opponent
 	
@@ -182,12 +191,12 @@ public class GamePanel extends JPanel {
 		
 		//CREATE THE TIMER LABELS
 		//	black
-		blackTimer = new JLabel("2:00");
+		blackTimer = new JLabel("5:00");
 		blackTimer.setFont(timerFont);
 		blackTimer.setBorder(new LineBorder(Color.BLACK));
 		blackTimer.setBackground(Color.DARK_GRAY);
 		//	white
-		whiteTimer = new JLabel("2:00");
+		whiteTimer = new JLabel("5:00");
 		whiteTimer.setFont(timerFont);
 		whiteTimer.setBorder(new LineBorder(Color.BLACK));
 		whiteTimer.setBackground(Color.DARK_GRAY);
@@ -421,7 +430,90 @@ public class GamePanel extends JPanel {
 	public void updateGamePanel() {
 		updateBoard();
 		updateInventories();
+		updateTimersServer();
 	}
+	
+	
+	
+	public void updateTimersServer() {
+		
+		whiteTime = gd.getPlayer2Time();
+		int seconds = whiteTime % 60;
+		int minutes = whiteTime / 60;
+		
+		if (seconds < 10) {
+			whiteTimer.setText(Integer.toString(minutes) + ":0" + Integer.toString(seconds));
+		} else {
+			whiteTimer.setText(Integer.toString(minutes) + ":" + Integer.toString(seconds));
+		}
+		
+		
+		blackTime = gd.getPlayer1Time();
+		seconds = blackTime % 60;
+		minutes = blackTime / 60;
+		
+		if (seconds < 10) {
+			blackTimer.setText(Integer.toString(minutes) + ":0" + Integer.toString(seconds));
+		} else {
+			blackTimer.setText(Integer.toString(minutes) + ":" + Integer.toString(seconds));
+		}
+
+
+		
+	    
+		//start the local timer
+		if (gd.getActivePlayer() == PlayerType.BLACK) {
+			startLocalTimer("black", blackTimer);
+		} else {
+			startLocalTimer("white", whiteTimer);
+		}
+		
+	}
+	
+	public void startGame() {
+		//create timer
+		localTimer = new Timer();
+		updateBoard();
+	}
+
+    public void startLocalTimer(String color, JLabel timerPanel) {
+    	localTimer = new Timer();
+        TimerTask task = new TimerTask() {
+            @Override
+            public void run() {
+            	int totalSeconds;
+            	if (color == "white") totalSeconds = whiteTime;
+            	else totalSeconds = blackTime;
+                if (totalSeconds > 0) {
+                	int seconds = totalSeconds % 60;
+            		int minutes = totalSeconds / 60;
+            		
+            		if (seconds < 10) {
+            			timerPanel.setText(Integer.toString(minutes) + ":0" + Integer.toString(seconds));
+            		} else {
+            			timerPanel.setText(Integer.toString(minutes) + ":" + Integer.toString(seconds));
+            		}
+            		if (color == "white") whiteTime--;
+            		else blackTime--;
+            		
+                } else {
+                    System.out.println("Time's up!");
+                    localTimer.cancel();
+                }
+            }
+        };
+        
+        localTimer.scheduleAtFixedRate(task, 0, 1000); // Schedule the task to run every 1000ms (1 second)
+    }
+    
+    public void stopLocalTimer() {
+    	localTimer.cancel();
+    }
+	
+	
+	
+	
+	
 	
 	public void updateBoard() {
 		
