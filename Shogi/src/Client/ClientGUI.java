@@ -1,13 +1,22 @@
-package client;
+package Client;
 
 import javax.swing.*;
+
+import LobbyManagement.BrowseLobbyControl;
+import LobbyManagement.BrowseLobbyPanel;
+import LobbyManagement.LobbyControl;
+import LobbyManagement.LobbyPanel;
+import UserManagement.CreateAccountControl;
+import UserManagement.CreateAccountPanel;
+import UserManagement.LoginControl;
+import UserManagement.LoginPanel;
 
 import java.awt.*;
 import java.io.IOException;
 
 public class ClientGUI extends JFrame
 {
-  public ClientGUI() 
+  public ClientGUI()
   {
     GameClient client = new GameClient();
     try{
@@ -50,6 +59,7 @@ public class ClientGUI extends JFrame
     container.add(view4, "4");
     container.add(view5, "5");
 
+
     // Show initial view
     cardLayout.show(container, "1");
 
@@ -60,7 +70,7 @@ public class ClientGUI extends JFrame
     this.setVisible(true);
   }
 
-  public static void main(String[] args) 
+  public static void main(String[] args)
   {
     new ClientGUI();
   }
