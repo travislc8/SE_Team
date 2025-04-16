@@ -5,13 +5,7 @@ public class Move {
     PieceLocation startLocation;
     PieceLocation endLocation;
     PlayerType player;
-
-    public Move(PieceType pieceType, PieceLocation start, PieceLocation end) {
-        this.player = start.getPlayer();
-        this.pieceType = pieceType;
-        startLocation = new PieceLocation(start.getxPos(), start.getyPos(), start.getPlayer());
-        endLocation = new PieceLocation(end.getxPos(), end.getyPos(), end.getPlayer());
-    }
+    boolean piecePromoted;
 
     public Move(Piece piece, PieceLocation end) {
         this.player = piece.getPlayer();
@@ -19,10 +13,19 @@ public class Move {
         startLocation = new PieceLocation(piece.getLocation().getxPos(), piece.getLocation().getyPos(),
                 piece.getPlayer());
         endLocation = new PieceLocation(end.getxPos(), end.getyPos(), end.getPlayer());
+        piecePromoted = piece.isPromoted();
+    }
+
+    private Move(PieceType pieceType, PieceLocation start, PieceLocation end, boolean promoted) {
+        this.player = start.getPlayer();
+        this.pieceType = pieceType;
+        startLocation = new PieceLocation(start.getxPos(), start.getyPos(), start.getPlayer());
+        endLocation = new PieceLocation(end.getxPos(), end.getyPos(), end.getPlayer());
+        this.piecePromoted = promoted;
     }
 
     public Move deepCopy() {
-        var copy = new Move(this.pieceType, this.startLocation, this.endLocation);
+        var copy = new Move(this.pieceType, this.startLocation, this.endLocation, this.piecePromoted);
         return copy;
 
     }
@@ -57,6 +60,14 @@ public class Move {
 
     public void setEndLocation(PieceLocation endLocation) {
         this.endLocation = endLocation;
+    }
+
+    public boolean isPiecePromoted() {
+        return piecePromoted;
+    }
+
+    public void setPiecePromoted(boolean piecePromoted) {
+        this.piecePromoted = piecePromoted;
     }
 
 }

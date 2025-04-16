@@ -193,6 +193,7 @@ public class GameData {
         
         // move piece
         movePiece.setLocation(move.getEndLocation());
+        movePiece.setPromoted(move.isPiecePromoted());
         if (!movePiece.isOnBoard()) {
         	movePiece.setOnBoard(true);
 			getPlayerHand(activePlayer).remove(movePiece);
