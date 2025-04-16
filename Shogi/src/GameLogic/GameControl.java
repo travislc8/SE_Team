@@ -97,7 +97,7 @@ public class GameControl implements MouseListener, ActionListener {
 		        	
 		        	}
 		        	
-		        	
+		        	gp.stopLocalTimer();
 		        	//Clear and update the board (REMOVE ONCE SERVER INTEGRATION IS IMPLEMENTED)
 		        	gp.clearEntireBoard();
 		        	//gp.updateGamePanel(gd);
@@ -212,7 +212,7 @@ public class GameControl implements MouseListener, ActionListener {
 	}
 	
 	public void startGame() {
-		gp.updateGamePanel();
+		gp.startGame();
 	}
 
 }
