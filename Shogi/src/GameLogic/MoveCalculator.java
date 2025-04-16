@@ -80,8 +80,13 @@ public class MoveCalculator {
         int returnY = movePiece.getLocation().getyPos();
         var moves = getMoves(movePiece);
         gameData.getPlayerPieces(movePiece.getPlayer()).add(movePiece);
-        movePiece.setOnBoard(true);
+        
+        
+        
+        //THIS LINE IS SETTING ITEMS IN HAND TO BE ON BOARD
+        movePiece.setOnBoard(true); //??????????????????
 
+        
         var safeMoves = new ArrayList<PieceLocation>();
         Piece removedPiece = null;
         for (var move : moves) {
@@ -102,6 +107,12 @@ public class MoveCalculator {
         movePiece.getLocation().setxPos(returnX);
         movePiece.getLocation().setyPos(returnY);
         gameData.getPlayerPieces(movePiece.getPlayer()).remove(movePiece);
+        
+        
+        //SET THE ITEM BACK TO NOT BEING ON BOARD????
+        movePiece.setOnBoard(false); ///MAYBE THE SOLUTION?????
+        
+        
         return safeMoves;
 
     }
