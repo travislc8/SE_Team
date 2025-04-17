@@ -12,6 +12,8 @@ public class GameControl implements MouseListener, ActionListener {
 	
 	private GamePanel gp;
 	private GameData gd;
+	private PlayerType controlPlayer; //Variable to represent the player that is controlling this GUI
+	
 	
 	public void setGamePanel(GamePanel gp) {
 		this.gp = gp;
@@ -22,6 +24,10 @@ public class GameControl implements MouseListener, ActionListener {
 		gp.setGameData(gd);
 	}
 	
+	public void setControlPlayer(PlayerType controlPlayer) {
+		this.controlPlayer = controlPlayer;
+	}
+	
 	@Override
 	public void mouseClicked(MouseEvent e) {
         
@@ -30,6 +36,12 @@ public class GameControl implements MouseListener, ActionListener {
 
 	@Override
 	public void mousePressed(MouseEvent e) {
+		
+		
+		if (controlPlayer != gd.activePlayer) {
+			System.out.println("Not your turn bozo");
+			return;
+		}
 		
 		//get the panel that was clicked
 			JPanel clickedPanel = (JPanel) e.getSource();
@@ -80,7 +92,7 @@ public class GameControl implements MouseListener, ActionListener {
 		        			}
 		        		} else {
 		        			//prompt the user if they want to promote
-			        		int result = gp.PromptPromotion(selectedPiece);
+			        		int result = gp.promptPromotion(selectedPiece);
 			        		if (result == JOptionPane.YES_OPTION) {
 			        			//The user chose to promote
 			                    selectedPiece.setPromoted(true);
@@ -214,5 +226,31 @@ public class GameControl implements MouseListener, ActionListener {
 	public void startGame() {
 		gp.startGame();
 	}
+	
+	public void updateVisuals() {
+		gp.clearEntireBoard();
+		gp.updateGamePanel();
+	}
+	
+	public void offerDraw() {
+		int result = gp.promptDrawOffer();
+	}
+	
+	public void forfeit() {
+		
+	}
+	
+	public void displayVictory() {
+		gp.displayVictory();
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
 }
