@@ -41,6 +41,7 @@ public class BishopLogic {
             location.setxPos(x);
             location.setyPos(y);
         }
+        opponent = false;
 
         y = saveY - 1;
         x = saveX - 1;
@@ -55,6 +56,7 @@ public class BishopLogic {
             location.setxPos(x);
             location.setyPos(y);
         }
+        opponent = false;
 
         y = saveY - 1;
         x = saveX + 1;
@@ -69,6 +71,7 @@ public class BishopLogic {
             location.setxPos(x);
             location.setyPos(y);
         }
+        opponent = false;
 
         y = saveY + 1;
         x = saveX - 1;
