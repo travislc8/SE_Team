@@ -36,7 +36,7 @@ public class GamePanel extends JPanel {
 	private JButton forfeitButton; //button to allow users to forfeit a game
 	private JButton offerDrawButton; //button to allow users to offer a draw to their opponent
 	
-	private PlayerType controlPlayer; //Variable to represent the player that is controlling this GUI
+	
 	
 	
 	//Constants for changing visuals of game
@@ -96,10 +96,6 @@ public class GamePanel extends JPanel {
 	
 	public void setGameData(GameData gd) {
 		this.gd = gd;
-	}
-	
-	public void setControlPlayer(PlayerType controlPlayer) {
-		this.controlPlayer = controlPlayer;
 	}
 	
 	
@@ -474,6 +470,7 @@ public class GamePanel extends JPanel {
 		//create timer
 		localTimer = new Timer();
 		updateBoard();
+		updateInventories();
 	}
 
     public void startLocalTimer(String color, JLabel timerPanel) {
@@ -599,7 +596,7 @@ public class GamePanel extends JPanel {
 		
 	}
 	
-	public int PromptPromotion(Piece piece) {
+	public int promptPromotion(Piece piece) {
 		
 		//generate the key for the image HashMap
 		String key = "" + piece.getPlayer() + piece.getPieceType() + true;
@@ -611,6 +608,22 @@ public class GamePanel extends JPanel {
 		return result;
 	}
 	
+	public int promptDrawOffer() {
+		
+		//prompt the user if they want to promote
+		int result = JOptionPane.showConfirmDialog(this, "Your opponent has offered a Draw.\nWould you like to Accept?", "Draw Offer", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null);
+		
+		return result;
+		
+		
+	}
+	
+	public void displayVictory() {
+		
+		JOptionPane.showConfirmDialog(this, "YOU WIN!", "WINNER IS YOU", JOptionPane.PLAIN_MESSAGE, JOptionPane.PLAIN_MESSAGE, null);
+		
+		
+	}
 	
 	
 	
