@@ -1,12 +1,19 @@
 package GameLogic;
 
+import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.event.*;
+import java.io.IOException;
 
 import javax.swing.*;
 
+import Client.GameClient;
+
 
 public class GameControl implements MouseListener, ActionListener {
+	
+	private JPanel container;
+	private GameClient client;
 	
 	private Piece selectedPiece;
 	
@@ -14,6 +21,17 @@ public class GameControl implements MouseListener, ActionListener {
 	private GameData gd;
 	private PlayerType controlPlayer; //Variable to represent the player that is controlling this GUI
 	
+	/**
+	 * Creates a GameControl object
+	 * 
+	 * @param container - the JPanel containing the GamePanel object associated with this controller
+	 * @param client - GameClient object used to send data to the server
+	 */
+	public GameControl(JPanel container, GameClient client) {
+		this.container = container;
+		this.client = client;
+		client.addGameControl(this);
+	}
 	
 	public void setGamePanel(GamePanel gp) {
 		this.gp = gp;
@@ -28,12 +46,11 @@ public class GameControl implements MouseListener, ActionListener {
 		this.controlPlayer = controlPlayer;
 	}
 	
-	@Override
-	public void mouseClicked(MouseEvent e) {
-        
-        
-	}
 
+
+	/**
+	 * Mouse controller that is used to allow user interaction with the board and player inventories
+	 */
 	@Override
 	public void mousePressed(MouseEvent e) {
 		
@@ -75,7 +92,6 @@ public class GameControl implements MouseListener, ActionListener {
 		        	//if the selected move is in the promotion zone
 		        	if (((selectedPiece.getPlayer() == PlayerType.BLACK && row < 3) || (selectedPiece.getPlayer() == PlayerType.BLACK && selectedPiece.getLocation().getyPos() < 3) || (selectedPiece.getPlayer() == PlayerType.WHITE && row > 5) || (selectedPiece.getPlayer() == PlayerType.WHITE && selectedPiece.getLocation().getyPos() > 5)) && selectedPiece.isOnBoard() && !selectedPiece.isPromoted() && selectedPiece.getPieceType() != PieceType.GOLDGENERAL && selectedPiece.getPieceType() != PieceType.KING) {
 		        		
-		        		
 		        		//check for Forced Promotions
 		        		if ((selectedPiece.getPieceType() == PieceType.PAWN || selectedPiece.getPieceType() == PieceType.LANCE) && (row == 0 || row == 8)) {
 		        			//if a pawn or lance is placed on the final row (no more moves left if not promoted)
@@ -109,27 +125,16 @@ public class GameControl implements MouseListener, ActionListener {
 		        	
 		        	}
 		        	
+		        	//stop the timer
 		        	gp.stopLocalTimer();
-		        	//Clear and update the board (REMOVE ONCE SERVER INTEGRATION IS IMPLEMENTED)
-		        	gp.clearEntireBoard();
-		        	//gp.updateGamePanel(gd);
-		        	
 		        	
 		        	//SEND UPDATE TO SERVER
-		        	//send the updated gameData object to the server
-		        	
-		        	
-		        	//Simulate the server sending back a new UPDATED GameData object
-		        	gd.changeTurn();
-		        	MoveCalculator mc = new MoveCalculator();
-		        	mc.calculateAvailableMoves(gd);
-		        	
-		        	setGameData(gd);
-		        	
-		        	//update again type beat
-		        	gp.clearEntireBoard();
-		        	gp.updateGamePanel();
-		        	
+		        	try {
+						client.sendToServer(gd);
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
 		        	
 		        	//leave this block
 		        	return;
@@ -159,38 +164,32 @@ public class GameControl implements MouseListener, ActionListener {
 				//IF THE BLACK INVENTORY WAS CLICKED
 				handleInventoryClick(e, PlayerType.BLACK);
 				
-				
 			}
 				
 	}
-	
 
-
-	@Override
-	public void mouseReleased(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void mouseEntered(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void mouseExited(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
+	/**
+	 * Action Handler used to handle button clicks for "Forfeit" and "Offer Draw"
+	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
+		String command = e.getActionCommand();
 		
+		System.out.println("BUTTON PRESEED");
+		
+		if (command == "Forfeit") {
+			forfeit();
+		} else if (command == "Offer Draw") {
+			offerDraw();
+		}
 	}
 	
-	
+	/**
+	 * Handles mouse clicks on Player inventories by determining which type of piece in their inventory they would like to select,
+	 * then shows all of the valid moves for the selected piece in their inventory
+	 * @param e - MouseEvent to get the event data from
+	 * @param player - Type of player whose inventory is being interacted with
+	 */
 	private void handleInventoryClick(MouseEvent e, PlayerType player) {
 		//set the game data
     	gd = gp.getGameData();
@@ -218,34 +217,156 @@ public class GameControl implements MouseListener, ActionListener {
         	gp.showValidMoves(selectedPiece);
         } else {
         	//IF THERE IS NOT A PIECE ON THE SQUARE
-        	
         }
         
 	}
 	
+	/**
+	 * Starts the game by setting up the GamePanel with correct specifications at the beginning of a match
+	 */
 	public void startGame() {
 		gp.startGame();
 	}
 	
+	/**
+	 * Updates the visuals of the GamePanel including checks for a new game, the end of a game, or continuation of a game
+	 */
 	public void updateVisuals() {
-		gp.clearEntireBoard();
-		gp.updateGamePanel();
-	}
-	
-	public void offerDraw() {
-		int result = gp.promptDrawOffer();
-	}
-	
-	public void forfeit() {
+		
+		System.out.println("Updating visuals");
+
+		
+		if (!gd.gameStarted) {
+			
+			System.out.println("This is a new game");
+			
+			//a new game has just started
+			CardLayout layout = (CardLayout) container.getLayout();
+			layout.show(container, "6");
+			startGame();
+		} else {
+			
+			System.out.println("This is an ongoing game");
+			
+			gp.clearEntireBoard();
+			gp.updateGamePanel();
+		}
 		
 	}
 	
-	public void displayVictory() {
-		gp.displayVictory();
+	/**
+	 * Handles all incoming GameData objects received from the server
+	 * 
+	 * @param serverGameData - GameData object received from the server
+	 */
+	public void handleServerGameData(GameData serverGameData) {
+		
+		setGameData(serverGameData);
+		updateVisuals();
+		
+		
+	}
+	
+	/**
+	 * Prompts the user if they would like to accept a draw offer from their opponent
+	 * If the user responds yes, end the game by updating the gameData
+	 * If the user responds no, nothing happens
+	 */
+	public void receiveDrawOffer() {
+		int result = gp.promptDrawOffer("receive");
+		if (result == JOptionPane.YES_OPTION) {
+			
+			//user accepts the draw
+			//Set the winner to null
+			gd.winner = null;
+			gd.setGameOver(true);
+			
+			//send updated GameData to server
+			try {
+				client.sendToServer(gd);
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
+			
+			
+		} else {
+			//user declines the draw
+		}
+	}
+	
+	/**
+	 * Prompts the user if they would like to offer a draw to their opponent
+	 * If the user responds yes, send "OFFER_DRAW" to the server
+	 * If the user responds no, nothing happens
+	 */
+	public void offerDraw() {
+		
+		int result = gp.promptDrawOffer("send");
+		if (result == JOptionPane.YES_OPTION) {
+
+			try {
+				client.sendToServer("OFFER_DRAW");
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
+			
+        } else {
+        	//The user chose not to offer the draw
+        }
+	}
+	
+	/**
+	 * Displays a prompt to the user to ask if they would like to forfeit
+	 * If the user responds yes, the player resigns by editing the gameData object, then sends it to the server
+	 * If the user responds no, nothing happens
+	 */
+	public void forfeit() {
+		int result = gp.promptForfeit();
+		if (result == JOptionPane.YES_OPTION) {
+			//The user chose to forfeit
+            gd.resign();
+			//Send the updated object to the server
+			try {
+				client.sendToServer(gd);
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
+        } else {
+        	//The user chose not to Resign
+        }
+		
+	}
+	
+	/**
+	 * Displays the end game result to the players which changes based on the winner variable in GameData
+	 */
+	public void displayEndGame() {
+		if (!gd.gameOver) {
+			//The game is not Over
+		} else if (gd.winner == null) {
+			//The game ended in a Draw
+			gp.displayEndGame("Draw");
+		} else if (gd.winner == controlPlayer) {
+			gp.displayEndGame("Win");
+		} else {
+			gp.displayEndGame("Lose");
+		}
 	}
 	
 	
-	
+	//Unused Mouse listener methods that are required to be present in this class
+	@Override
+	public void mouseClicked(MouseEvent e) {
+	}
+	@Override
+	public void mouseReleased(MouseEvent e) {
+	}
+	@Override
+	public void mouseEntered(MouseEvent e) {
+	}
+	@Override
+	public void mouseExited(MouseEvent e) {
+	}
 	
 	
 	

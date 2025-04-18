@@ -200,10 +200,12 @@ public class GamePanel extends JPanel {
 		
 		//CREATE THE USER BUTTONS (forfeit and offer draw)
 		forfeitButton = new JButton("Forfeit");
+		forfeitButton.addActionListener(gc);
 		forfeitButton.setFont(buttonFont);
 		forfeitButton.setPreferredSize(new Dimension(100, 50));
 		
 		offerDrawButton = new JButton("Offer Draw");
+		offerDrawButton.addActionListener(gc);
 		offerDrawButton.setFont(buttonFont);
 		offerDrawButton.setPreferredSize(new Dimension(150, 50));
 		
@@ -494,6 +496,7 @@ public class GamePanel extends JPanel {
             		else blackTime--;
             		
                 } else {
+                	timerPanel.setText("0:00");
                     System.out.println("Time's up!");
                     localTimer.cancel();
                 }
@@ -608,20 +611,37 @@ public class GamePanel extends JPanel {
 		return result;
 	}
 	
-	public int promptDrawOffer() {
+	public int promptDrawOffer(String direction) {
 		
+		if (direction == "send") {
+			//prompt the user if they want to promote
+			int result = JOptionPane.showConfirmDialog(this, "Are you sure you want to offer a Draw?", "Draw Offer", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null);
+			
+			return result;
+		} else {
+			//prompt the user if they want to promote
+			int result = JOptionPane.showConfirmDialog(this, "Your opponent has offered a Draw.\nWould you like to Accept?", "Draw Offer", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null);
+			
+			return result;
+		}
+	}
+	
+	public int promptForfeit() {
+				
 		//prompt the user if they want to promote
-		int result = JOptionPane.showConfirmDialog(this, "Your opponent has offered a Draw.\nWould you like to Accept?", "Draw Offer", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null);
+		int result = JOptionPane.showConfirmDialog(this, "Would you like to forfeit?", "Forfeit", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 		
 		return result;
-		
-		
 	}
 	
 	public void displayVictory() {
 		
 		JOptionPane.showConfirmDialog(this, "YOU WIN!", "WINNER IS YOU", JOptionPane.PLAIN_MESSAGE, JOptionPane.PLAIN_MESSAGE, null);
 		
+		
+	}
+	
+	public void displayEndGame(String result) {
 		
 	}
 	

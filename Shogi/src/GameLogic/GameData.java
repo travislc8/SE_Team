@@ -1,5 +1,6 @@
 package GameLogic;
 
+import java.io.Serializable;
 import java.sql.Date;
 import java.sql.Time;
 import java.util.ArrayList;
@@ -9,7 +10,7 @@ import java.util.Timer;
  * Holds the necessary data for a game of shogi to be properly displayed in a
  * gui
  */
-public class GameData {
+public class GameData implements Serializable {
     PlayerType player1Type;
     PlayerType player2Type;
     PlayerType activePlayer;

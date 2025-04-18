@@ -1,8 +1,9 @@
 package GameLogic;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Piece {
+public class Piece implements Serializable {
     boolean promoted;
     boolean onBoard;
     PlayerType player;

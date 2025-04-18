@@ -1,9 +1,11 @@
 package GameLogic;
 
+import java.io.Serializable;
+
 /**
  * Holds a location on a 2D map for a piece.
  */
-public class PieceLocation {
+public class PieceLocation implements Serializable {
     // TODO: does this need to hold a PlayerType
     PlayerType player;
     int xPos;

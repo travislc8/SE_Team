@@ -1,9 +1,11 @@
 package GameLogic;
 
+import java.io.Serializable;
+
 /**
  * Represents a move of a piece on the shogi board.
  */
-public class Move {
+public class Move implements Serializable {
     PieceType pieceType;
     PieceLocation startLocation;
     PieceLocation endLocation;
