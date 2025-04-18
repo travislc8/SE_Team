@@ -118,9 +118,12 @@ public class GameServer extends AbstractServer
         currentLobbies.add(newLobby);
         arg1.setInfo("lobbyId", newlobbyId);
 
-        try {
+        try 
+        {
           arg1.sendToClient(newLobby);
-        } catch (IOException e) {
+        } 
+        catch (IOException e) 
+        {
           // TODO Auto-generated catch block
           e.printStackTrace();
         }
@@ -129,92 +132,122 @@ public class GameServer extends AbstractServer
       }
       else if(msg.startsWith("JOIN_LOBBY "))
       {
-    	  int joinLobbyId = Integer.parseInt(msg.split(" ")[1]);
-          User joiningUser = (User) arg1.getInfo("user");
-          for (LobbyData lobby : currentLobbies) {
-            if (lobby.getLobbyId() == joinLobbyId) {
-              if (lobby.getOpponent() == null) {
-                lobby.setOpponent(joiningUser);
-                arg1.setInfo("lobbyId", joinLobbyId);
-                try {
-                  arg1.sendToClient(lobby);
-                } catch (IOException e) {
-                  // TODO Auto-generated catch block
-                  e.printStackTrace();
-                }
-              } else {
-                try {
-                  arg1.sendToClient(new Error("BrowseLobby Lobby is already full."));
-                } catch (IOException e) {
-                  // TODO Auto-generated catch block
-                  e.printStackTrace();
-                }
+    	int joinLobbyId = Integer.parseInt(msg.split(" ")[1]);
+    	User joiningUser = (User) arg1.getInfo("user");
+        for (LobbyData lobby : currentLobbies) 
+        {
+          if (lobby.getLobbyId() == joinLobbyId) 
+          {
+            if (lobby.getOpponent() == null) 
+            {
+              lobby.setOpponent(joiningUser);
+              arg1.setInfo("lobbyId", joinLobbyId);
+              try 
+              {
+                arg1.sendToClient(lobby);
+              } 
+              catch (IOException e) 
+              {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
               }
-              return;
+            } 
+            else 
+            {
+              try 
+              {
+                arg1.sendToClient(new Error("BrowseLobby Lobby is already full."));
+              } 
+              catch (IOException e) 
+              {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+              }
             }
-          }
-
-          try {
-            arg1.sendToClient(new Error("BrowseLobby Lobby not found."));
-          } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            return;
           }
         }
-      else if (msg.equals("START_GAME")) {
-    	    int clientLobbyId = (int) arg1.getInfo("lobbyId");
 
-    	    // Find the lobby from the list
-    	    LobbyData lobbyToStart = null;
-    	    for (LobbyData lobby : currentLobbies) {
-    	      if (lobby.getLobbyId() == clientLobbyId) {
-    	        lobbyToStart = lobby;
-    	        break;
-    	      }
-    	    }
+        try 
+        {
+          arg1.sendToClient(new Error("BrowseLobby Lobby not found."));
+        } 
+        catch (IOException e) 
+        {
+          // TODO Auto-generated catch block
+          e.printStackTrace();
+        }
+      }
+      else if (msg.equals("START_GAME")) 
+      {
+    	int clientLobbyId = (int) arg1.getInfo("lobbyId");
 
-    	    if (lobbyToStart == null) {
-    	      try {
-    	        arg1.sendToClient(new Error("Lobby not found."));
-    	      } catch (IOException e) {
-    	        e.printStackTrace();
-    	      }
-    	      return;
-    	    }
-
-    	    // Create the game and add to activeGames
-    	    Game newGame = new Game();
-    	    newGame.getGameData().setGameId(clientLobbyId); // Link lobbyId to game
-
-    	    activeGames.put(clientLobbyId, newGame);
-
-    	    // Sets the player timers
-    	    
-    	    // Also set who is player 1 and player 2
-    	    // Could be through LobbyControl setGameOptions() information
-    	    // sent to the server or I can add a loop control variable
-    	    // to my send to both players where the first one gets sent player
-    	    // i and the second gets sent i++
-    	    
-    	    // Broadcast starting game state to both players
-    	    for (ConnectionToClient client : getLobbyClients(clientLobbyId)) {
-    	    	client.setInfo("gameId", clientLobbyId);
-    	      try {
-    	        client.sendToClient(newGame.getGameData());
-    	      } catch (IOException e) {
-    	        e.printStackTrace();
-    	      }
-    	    }
+    	// Find the lobby from the list
+    	LobbyData lobbyToStart = null;
+    	for (LobbyData lobby : currentLobbies) 
+    	{
+    	  if (lobby.getLobbyId() == clientLobbyId) 
+    	  {
+    	    lobbyToStart = lobby;
+    	    break;
     	  }
-      else if (msg.equals("OFFER_DRAW")) {
+    	}
+
+        if (lobbyToStart == null) 
+   	    {
+   	      try 
+   	      {
+   	        arg1.sendToClient(new Error("Lobby not found."));
+   	      } 
+   	      catch (IOException e) 
+   	      {
+   	        e.printStackTrace();
+   	      }
+   	      return;
+   	    }
+        // Create the game and add to activeGames
+        Game newGame = new Game();
+    	newGame.getGameData().setGameId(clientLobbyId); // Link lobbyId to game
+
+    	activeGames.put(clientLobbyId, newGame);
+
+    	// Sets the player timers
+    	    
+    	// Also set who is player 1 and player 2
+    	// Could be through LobbyControl setGameOptions() information
+    	// sent to the server or I can add a loop control variable
+    	// to my send to both players where the first one gets sent player
+    	// i and the second gets sent i++
+    	    
+    	// Broadcast starting game state to both players
+    	for (ConnectionToClient client : getLobbyClients(clientLobbyId)) 
+    	{
+    	  client.setInfo("gameId", clientLobbyId);
+    	  try
+    	  {
+    	    client.sendToClient(newGame.getGameData());
+    	  } 
+    	  catch (IOException e) 
+    	  {
+    	    e.printStackTrace();
+    	  }
+    	}
+      }
+      else if (msg.equals("OFFER_DRAW")) 
+      {
     	  int lobbyId = (int) arg1.getInfo("lobbyId");
 
-    	    for (ConnectionToClient client : getLobbyClients(lobbyId)) {
+    	    for (ConnectionToClient client : getLobbyClients(lobbyId)) 
+    	    {
     	        // Send to opponent only
-    	        if (client != arg1) {
-    	            try {
+    	        if (client != arg1) 
+    	        {
+    	            try 
+    	            {
     	                client.sendToClient("OfferDraw");
-    	            } catch (IOException e) {
+    	            }
+    	            catch (IOException e)
+    	            {
     	                e.printStackTrace();
     	            }
     	        }
@@ -222,17 +255,22 @@ public class GameServer extends AbstractServer
   	    }
   	  
     }
-    else if (arg0 instanceof GameData gameDataFromClient) {
+    else if (arg0 instanceof GameData gameDataFromClient) 
+    {
         
     	// Get the game id
     	int gameId = gameDataFromClient.getGameId();
     	Game game = activeGames.get(gameId);
 
 
-        if (game == null) {
-          try {
+        if (game == null) 
+        {
+          try 
+          {
             arg1.sendToClient(new Error("No game found for this lobby."));
-          } catch (IOException e) {
+          } 
+          catch (IOException e) 
+          {
             e.printStackTrace();
           }
           return;
@@ -244,10 +282,14 @@ public class GameServer extends AbstractServer
         
         
         // Send the updated gameData object to both players in the game id 
-        for (ConnectionToClient client : getLobbyClients(gameId)) {
-          try {
+        for (ConnectionToClient client : getLobbyClients(gameId)) 
+        {
+          try 
+          {
             client.sendToClient(updatedGameData);
-          } catch (IOException e) {
+          } 
+          catch (IOException e) 
+          {
             e.printStackTrace();
           }
         }
@@ -264,16 +306,19 @@ public class GameServer extends AbstractServer
     //log.append("Press Listen to restart server\n");
   }
   
-  private List<ConnectionToClient> getLobbyClients(int lobbyId) {
+  private List<ConnectionToClient> getLobbyClients(int lobbyId) 
+  {
 	  List<ConnectionToClient> result = new ArrayList<>();
-	  for (Thread clientThread : getClientConnections()) {
+	  for (Thread clientThread : getClientConnections()) 
+	  {
 	    ConnectionToClient client = (ConnectionToClient) clientThread;
 	    Object info = client.getInfo("lobbyId");
-	    if (info != null && info instanceof Integer && (int) info == lobbyId) {
+	    if (info != null && info instanceof Integer && (int) info == lobbyId) 
+	    {
 	      result.add(client);
 	    }
 	  }
 	  return result;
-	}
+  }
 }
 
