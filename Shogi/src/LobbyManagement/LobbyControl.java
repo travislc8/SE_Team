@@ -6,6 +6,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 
 public class LobbyControl implements ActionListener {
     private boolean inLobby = false;
@@ -18,8 +19,12 @@ public class LobbyControl implements ActionListener {
     }
 
     public void startGame() {
-        // Placeholder: logic to start the game
-        System.out.println("Starting game...");
+        try {
+			gameClient.sendToServer("START_GAME");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     }
 
     public void leaveLobby() {
