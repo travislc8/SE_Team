@@ -206,6 +206,21 @@ public class GameServer extends AbstractServer
     	      }
     	    }
     	  }
+      else if (msg.equals("OFFER_DRAW")) {
+    	  int lobbyId = (int) arg1.getInfo("lobbyId");
+
+    	    for (ConnectionToClient client : getLobbyClients(lobbyId)) {
+    	        // Send to opponent only
+    	        if (client != arg1) {
+    	            try {
+    	                client.sendToClient("OfferDraw");
+    	            } catch (IOException e) {
+    	                e.printStackTrace();
+    	            }
+    	        }
+    	    }
+  	    }
+  	  
     }
     else if (arg0 instanceof GameData gameDataFromClient) {
         
