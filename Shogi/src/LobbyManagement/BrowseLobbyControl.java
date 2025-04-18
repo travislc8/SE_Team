@@ -6,6 +6,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class BrowseLobbyControl implements ActionListener {
@@ -22,13 +23,23 @@ public class BrowseLobbyControl implements ActionListener {
 
     public void createLobbyPressed() {
         // Send request to server to create a lobby
-        gameClient.handleMessageFromServer("CREATE_LOBBY");
+        try {
+			gameClient.sendToServer("CREATE_LOBBY");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
     }
 
     public void joinLobby(LobbyData selectedLobby) {
         // Send request to join the selected lobby
-        gameClient.handleMessageFromServer("JOIN_LOBBY " + selectedLobby.getLobbyId());
+        try {
+			gameClient.sendToServer("JOIN_LOBBY " + selectedLobby.getLobbyId());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
     }
 
