@@ -56,4 +56,13 @@ public class GameTest {
         msg = "piece was not moved to " + x + ":" + y;
         assertTrue(msg, data.getPlayer1Pieces().getFirst().getLocation().xyEqual(x, y));
     }
+
+    @Test
+    public void setGameIdTest() {
+        Game game = new Game();
+        game.setGameId(1);
+
+        String msg = "game id";
+        assertTrue(msg, game.getGameId() == 1);
+    }
 }

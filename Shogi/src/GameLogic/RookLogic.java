@@ -2,7 +2,19 @@ package GameLogic;
 
 import java.util.ArrayList;
 
+/**
+ * Logic class for the rook moves calculations.
+ */
 public class RookLogic {
+    /**
+     * Calculates the locations for all of the available moves for a given piece
+     * based on the game data
+     *
+     * @param piece    the piece that the moves should be calculated for
+     * @param gameData the state the game is in
+     * @return an ArrayList containing all of the possible locations that the piece
+     *         can move
+     */
     public static ArrayList<PieceLocation> calculateMoves(Piece piece, GameData gameData) {
         var list = new ArrayList<PieceLocation>();
         int x = piece.getLocation().getxPos();
@@ -15,6 +27,55 @@ public class RookLogic {
             } else {
                 list = nonPromotedList(x, y, piece.getPlayer(), gameData);
             }
+        }
+
+        return list;
+    }
+
+    /**
+     * Returns the available moves if there were none of the opponents pieces on the
+     * board
+     *
+     * @param piece    the piece that the moves should be calculated for
+     * @param gameData the state the game is in
+     * @return an ArrayList containing all of the possible locations that the piece
+     *         can move
+     */
+    public static ArrayList<PieceLocation> noOpponentMoves(Piece piece, GameData gameData) {
+        var list = new ArrayList<PieceLocation>();
+        int x = piece.getLocation().getxPos();
+        int y = piece.getLocation().getyPos();
+        PlayerType type = piece.getPlayer();
+
+        int saveX = x;
+        int saveY = y;
+
+        y += 1;
+        x = saveX;
+        while (PieceLogic.isValidLocation(new PieceLocation(x, y, type), gameData)) {
+            list.add(new PieceLocation(x, y, type));
+            y += 1;
+        }
+
+        y = saveY - 1;
+        x = saveX;
+        while (PieceLogic.isValidLocation(new PieceLocation(x, y, type), gameData)) {
+            list.add(new PieceLocation(x, y, type));
+            y -= 1;
+        }
+
+        y = saveY;
+        x = saveX + 1;
+        while (PieceLogic.isValidLocation(new PieceLocation(x, y, type), gameData)) {
+            list.add(new PieceLocation(x, y, type));
+            x += 1;
+        }
+
+        y = saveY;
+        x = saveX - 1;
+        while (PieceLogic.isValidLocation(new PieceLocation(x, y, type), gameData)) {
+            list.add(new PieceLocation(x, y, type));
+            x -= 1;
         }
 
         return list;
@@ -110,43 +171,4 @@ public class RookLogic {
         return list;
     }
 
-    public static ArrayList<PieceLocation> noOpponentMoves(Piece piece, GameData gameData) {
-        var list = new ArrayList<PieceLocation>();
-        int x = piece.getLocation().getxPos();
-        int y = piece.getLocation().getyPos();
-        PlayerType type = piece.getPlayer();
-
-        int saveX = x;
-        int saveY = y;
-
-        y += 1;
-        x = saveX;
-        while (PieceLogic.isValidLocation(new PieceLocation(x, y, type), gameData)) {
-            list.add(new PieceLocation(x, y, type));
-            y += 1;
-        }
-
-        y = saveY - 1;
-        x = saveX;
-        while (PieceLogic.isValidLocation(new PieceLocation(x, y, type), gameData)) {
-            list.add(new PieceLocation(x, y, type));
-            y -= 1;
-        }
-
-        y = saveY;
-        x = saveX + 1;
-        while (PieceLogic.isValidLocation(new PieceLocation(x, y, type), gameData)) {
-            list.add(new PieceLocation(x, y, type));
-            x += 1;
-        }
-
-        y = saveY;
-        x = saveX - 1;
-        while (PieceLogic.isValidLocation(new PieceLocation(x, y, type), gameData)) {
-            list.add(new PieceLocation(x, y, type));
-            x -= 1;
-        }
-
-        return list;
-    }
 }

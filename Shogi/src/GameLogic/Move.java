@@ -1,5 +1,8 @@
 package GameLogic;
 
+/**
+ * Represents a move of a piece on the shogi board.
+ */
 public class Move {
     PieceType pieceType;
     PieceLocation startLocation;

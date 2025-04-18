@@ -22,6 +22,10 @@ public class GameData {
     boolean gameStarted;
     long lastMoveTime;
 
+    /**
+     * Creates a new GameData instance but does not initialize the game. To
+     * initialize, use newGame().
+     */
     public GameData() {
         player1Type = PlayerType.BLACK;
         player2Type = PlayerType.WHITE;
@@ -33,6 +37,9 @@ public class GameData {
 
     }
 
+    /**
+     * Sets up the data to represent the starting state of a new game of shogi.
+     */
     public void newGame() {
         activePlayer = PlayerType.BLACK;
         moveList = new ArrayList<>();
@@ -89,6 +96,9 @@ public class GameData {
         player1Pieces.add(new Piece(PlayerType.BLACK, PieceType.KING, 4, 8));
     }
 
+    /**
+     * Changes which player is the active player and decrements the players time.
+     */
     public void changeTurn() {
         long currentTime = System.currentTimeMillis();
         if (!gameStarted) {
@@ -97,7 +107,7 @@ public class GameData {
         }
 
         int elapsedTime = (int) (currentTime - lastMoveTime);
-        elapsedTime = (int)elapsedTime/1000;
+        elapsedTime = (int) elapsedTime / 1000;
         if (activePlayer == PlayerType.BLACK) {
             player1Time -= elapsedTime;
             activePlayer = PlayerType.WHITE;
@@ -109,6 +119,10 @@ public class GameData {
         lastMoveTime = currentTime;
     }
 
+    /**
+     * Updates the gameOver variable to be true if the player has no valid moves
+     * left.
+     */
     public void updateEndGame() {
         for (var piece : getPlayerPieces(activePlayer)) {
             if (piece.getAvailableMoves().size() > 0) {
@@ -126,6 +140,9 @@ public class GameData {
         gameOver = true;
     }
 
+    /**
+     * Updates the timer for the active player
+     */
     public void updateTimer() {
         long currentTime = System.currentTimeMillis();
         if (!gameStarted) {
@@ -133,7 +150,7 @@ public class GameData {
             lastMoveTime = currentTime;
         }
 
-        int elapsedTime = (int) (currentTime - lastMoveTime);
+        int elapsedTime = (int) (currentTime - lastMoveTime) / 1000;
         if (activePlayer == PlayerType.BLACK) {
             player1Time -= elapsedTime;
         } else {
@@ -141,6 +158,12 @@ public class GameData {
         }
     }
 
+    /**
+     * Makes the move that is given if it is a valid move
+     *
+     * @param move a move instance that represents the desired move
+     * @return if the move was made
+     */
     public boolean makeMove(Move move) {
         if (move.getPlayer() != activePlayer) {
             throw new IllegalStateException("Move player must be the same as the active player");
@@ -148,22 +171,20 @@ public class GameData {
 
         Piece movePiece = null;
         ArrayList<Piece> playerHand = getPlayerHand(activePlayer);
-        //if the piece is NOT on the board
+        // if the piece is NOT on the board
         if (move.getStartLocation().getxPos() == -1 && move.getStartLocation().getyPos() == -1) {
-        	//select the first piece in hand of the same type
-        	for (Piece piece : playerHand) {
-        		if (piece.getPieceType() == move.getPieceType() && !piece.isOnBoard()) {
-        			movePiece = piece;
-        			break;
-        		}
-        	}
-        	
+            // select the first piece in hand of the same type
+            for (Piece piece : playerHand) {
+                if (piece.getPieceType() == move.getPieceType() && !piece.isOnBoard()) {
+                    movePiece = piece;
+                    break;
+                }
+            }
+
         } else {
-        	//if the piece IS on the board
-        	movePiece = getPieceAt(move.getStartLocation());
+            // if the piece IS on the board
+            movePiece = getPieceAt(move.getStartLocation());
         }
-        
-        
 
         if (movePiece == null) {
             return false;
@@ -191,19 +212,23 @@ public class GameData {
             getPlayerHand(activePlayer).add(opPiece);
         }
 
-        
         // move piece
         movePiece.setLocation(move.getEndLocation());
         movePiece.setPromoted(move.isPiecePromoted());
         if (!movePiece.isOnBoard()) {
-        	movePiece.setOnBoard(true);
-			getPlayerHand(activePlayer).remove(movePiece);
-			getPlayerPieces(activePlayer).add(movePiece);
+            movePiece.setOnBoard(true);
+            getPlayerHand(activePlayer).remove(movePiece);
+            getPlayerPieces(activePlayer).add(movePiece);
         }
 
         return true;
     }
 
+    /**
+     * Determines if there is an opponent piece at the specified location and
+     * removes it from the opponents pieces if there is one. Returns the piece that
+     * was removed
+     */
     public Piece removeOpPieceAt(PlayerType playerType, int x, int y) {
         for (var piece : getOtherPlayerPieces(playerType)) {
             if (piece.getLocation().xyEqual(x, y)) {
@@ -387,6 +412,12 @@ public class GameData {
         this.gameId = gameId;
     }
 
+    /**
+     * Creates a copy of the instance that does not share any addresses with the
+     * original
+     *
+     * @return a unique copy of the original
+     */
     public GameData deepCopy() {
         GameData copy = new GameData();
 

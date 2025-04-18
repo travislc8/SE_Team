@@ -2,6 +2,10 @@ package GameLogic;
 
 import java.util.ArrayList;
 
+/**
+ * MoveCalculator does the necessary calculations to update a GameData object so
+ * that the active players pieces contain the correct available moves.
+ */
 public class MoveCalculator {
 
     private GameData gameData;
@@ -10,6 +14,13 @@ public class MoveCalculator {
         gameData = null;
     }
 
+    /**
+     * Calculates the available moves for all of the active players pieces. The
+     * GameData instance is not returned because it is modified at the location that
+     * is sent into the method.
+     *
+     * @param gameData the gameData instance that the moves will be calculated for
+     */
     public void calculateAvailableMoves(GameData gameData) {
         this.gameData = gameData;
 
@@ -80,13 +91,10 @@ public class MoveCalculator {
         int returnY = movePiece.getLocation().getyPos();
         var moves = getMoves(movePiece);
         gameData.getPlayerPieces(movePiece.getPlayer()).add(movePiece);
-        
-        
-        
-        //THIS LINE IS SETTING ITEMS IN HAND TO BE ON BOARD
-        movePiece.setOnBoard(true); //??????????????????
 
-        
+        // THIS LINE IS SETTING ITEMS IN HAND TO BE ON BOARD
+        movePiece.setOnBoard(true); // ??????????????????
+
         var safeMoves = new ArrayList<PieceLocation>();
         Piece removedPiece = null;
         for (var move : moves) {
@@ -107,12 +115,10 @@ public class MoveCalculator {
         movePiece.getLocation().setxPos(returnX);
         movePiece.getLocation().setyPos(returnY);
         gameData.getPlayerPieces(movePiece.getPlayer()).remove(movePiece);
-        
-        
-        //SET THE ITEM BACK TO NOT BEING ON BOARD????
-        movePiece.setOnBoard(false); ///MAYBE THE SOLUTION?????
-        
-        
+
+        // SET THE ITEM BACK TO NOT BEING ON BOARD????
+        movePiece.setOnBoard(false); /// MAYBE THE SOLUTION?????
+
         return safeMoves;
 
     }

@@ -16,7 +16,8 @@ import org.junit.runners.Suite;
         RookLogicTest.class,
         PawnLogicTest.class,
         MoveCalculatorTest.class,
-        GameTest.class
+        GameTest.class,
+        GameDataTest.class
 })
 public final class AllTestsSuite {
 }
