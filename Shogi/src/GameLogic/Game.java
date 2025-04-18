@@ -41,6 +41,16 @@ public class Game {
             throw new IllegalStateException(
                     "Expected the game from the server to be different than the retained game data, rethink life");
         }
+        // if the player resigned
+        if (gameFromServer.gameOver == true) {
+            // if the game is not already over
+            if (gameData.isGameOver() != true) {
+                gameData.resign();
+            }
+            return gameData;
+        }
+
+        // makes the move given by the client
         if (moveAdded(gameFromServer)) {
             if (gameData.makeMove(gameFromServer.getMoveList().getLast())) {
                 gameData.changeTurn();
