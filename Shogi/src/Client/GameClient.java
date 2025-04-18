@@ -68,6 +68,9 @@ public class GameClient extends AbstractClient {
                 case "CreateAccountSuccessful" -> {
                     createAccountControl.createAccountSuccess();
                 }
+                case "OfferDraw" -> {
+                	gameControl.receiveDrawOffer();
+                }
                 default -> {
                     System.out.println("Unknown server message: " + message);
                 }
@@ -106,8 +109,9 @@ public class GameClient extends AbstractClient {
         // Handle game-related updates from the server
         else if (arg0 instanceof GameData gameData)
         {
-            //forward to GameLogic controller
+        	//forward to GameLogic controller
             System.out.println("Received GameData from server: " + gameData.toString());
+            gameControl.handleServerGameData((GameData)arg0);
         }
     }
 

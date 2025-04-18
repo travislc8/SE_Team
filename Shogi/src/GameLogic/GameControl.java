@@ -236,6 +236,18 @@ public class GameControl implements MouseListener, ActionListener {
 		System.out.println("Updating visuals");
 
 		
+		if (gd.gameOver) {
+			System.out.println("The game has ended");
+			
+			gp.clearEntireBoard();
+			gp.updateGamePanel();
+			
+			displayEndGame();
+			
+			return;
+			
+		}
+		
 		if (!gd.gameStarted) {
 			
 			System.out.println("This is a new game");
@@ -316,6 +328,22 @@ public class GameControl implements MouseListener, ActionListener {
 	}
 	
 	/**
+	 * Ends the game when a player runs out of time
+	 */
+	public void timeUpForfeit() {
+		//resign the game causing opponent player to win
+		gd.resign();
+		
+		//Send the updated object to the server
+		try {
+			client.sendToServer(gd);
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+	}
+	
+	
+	/**
 	 * Displays a prompt to the user to ask if they would like to forfeit
 	 * If the user responds yes, the player resigns by editing the gameData object, then sends it to the server
 	 * If the user responds no, nothing happens
@@ -341,16 +369,28 @@ public class GameControl implements MouseListener, ActionListener {
 	 * Displays the end game result to the players which changes based on the winner variable in GameData
 	 */
 	public void displayEndGame() {
+		
+		int confirm;
 		if (!gd.gameOver) {
 			//The game is not Over
+			return;
 		} else if (gd.winner == null) {
 			//The game ended in a Draw
-			gp.displayEndGame("Draw");
+			confirm = gp.displayEndGame("Draw");
 		} else if (gd.winner == controlPlayer) {
-			gp.displayEndGame("Win");
+			confirm = gp.displayEndGame("Win");
 		} else {
-			gp.displayEndGame("Lose");
+			confirm = gp.displayEndGame("Lose");
 		}
+		
+		System.out.println(confirm);
+		
+		//Send the user back to the lobby
+		if (confirm == 0) {
+			CardLayout layout = (CardLayout) container.getLayout();
+			layout.show(container, "4");
+		}
+		
 	}
 	
 	

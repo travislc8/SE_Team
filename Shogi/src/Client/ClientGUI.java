@@ -2,6 +2,8 @@ package Client;
 
 import javax.swing.*;
 
+import GameLogic.GameControl;
+import GameLogic.GamePanel;
 import LobbyManagement.BrowseLobbyControl;
 import LobbyManagement.BrowseLobbyPanel;
 import LobbyManagement.LobbyControl;
@@ -38,19 +40,22 @@ public class ClientGUI extends JFrame
     CreateAccountControl cac = new CreateAccountControl(container, client);
     LobbyControl loc = new LobbyControl(client, container);
     BrowseLobbyControl blc = new BrowseLobbyControl(client, container);
-
+    GameControl gc = new GameControl(container, client);
+    
     // Create UI panels
     JPanel view1 = new InitialPanel(ic);
     JPanel view2 = new LoginPanel(lc);
     JPanel view3 = new CreateAccountPanel(cac);
     JPanel view4 = new LobbyPanel(loc);
     JPanel view5 = new BrowseLobbyPanel(blc);
+    JPanel view6 = new GamePanel(gc);
 
     // Register controllers with the client
     client.addLoginControl(lc);
     client.addCreateAccountControl(cac);
     client.addLobbyControl(loc);
     client.addBrowseLobbyControl(blc);
+    client.addGameControl(gc);
 
     // Add views to container
     container.add(view1, "1");
@@ -58,7 +63,7 @@ public class ClientGUI extends JFrame
     container.add(view3, "3");
     container.add(view4, "4");
     container.add(view5, "5");
-
+    container.add(view6, "6");
 
     // Show initial view
     cardLayout.show(container, "1");
@@ -68,6 +73,7 @@ public class ClientGUI extends JFrame
     this.add(container);
     this.setSize(600, 400);
     this.setVisible(true);
+    
   }
 
   public static void main(String[] args)

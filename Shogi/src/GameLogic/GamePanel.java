@@ -17,9 +17,7 @@ public class GamePanel extends JPanel {
 	private Piece[][] objectBoard; //2d array used for referencing objects for logic
 	
 	private JLabel[] whiteInventory;
-	private ArrayList<Piece> objectWhiteInventory;
 	private JLabel[] blackInventory;
-	private ArrayList<Piece> objectBlackInventory;
 	
 	private JPanel boardPanel; //Panel that will contain the board
 	private JPanel whiteInventoryPanel; //Panel that will contain the white player's inventory
@@ -32,12 +30,11 @@ public class GamePanel extends JPanel {
 
 	private Timer localTimer; //timer utility used for visual count down
 	
-	
 	private JButton forfeitButton; //button to allow users to forfeit a game
 	private JButton offerDrawButton; //button to allow users to offer a draw to their opponent
 	
-	
-	
+	private GameControl gc;
+
 	
 	//Constants for changing visuals of game
 	//FRAME SIZING
@@ -77,7 +74,6 @@ public class GamePanel extends JPanel {
 		return boardPanel;
 	}
 	
-	
 	public JPanel getWhiteInventoryPanel() {
 		return whiteInventoryPanel;
 	}
@@ -93,15 +89,15 @@ public class GamePanel extends JPanel {
 		return inventoryIndex;
 	}
 	
-	
 	public void setGameData(GameData gd) {
 		this.gd = gd;
 	}
 	
 	
-	
-	
-	
+	/**
+	 * GamePanel constructor used to create a GamePanel object
+	 * @param gc - GameControl object associated with this GamePanel
+	 */
 	public GamePanel(GameControl gc) {
 		
 		//instantiate and fill the pieceImages HashMap
@@ -247,6 +243,7 @@ public class GamePanel extends JPanel {
 		
 		
 		//give the control a reference to this Panel
+		this.gc = gc;
 		gc.setGamePanel(this);
 	}
 	
@@ -350,13 +347,17 @@ public class GamePanel extends JPanel {
 		
 	}
 	
-	//clears the entire board empty of everything
+	/**
+	 * clears the entire board empty of everything (board colors and piece images)
+	 */
 	public void clearEntireBoard() {
 		clearValidMoves();
 		clearPieces();
 	}
 	
-	//clears all of the valid move colors (and selected piece color) from the board
+	/**
+	 * clears all of the valid move colors (and selected piece color) from the board
+	 */
 	public void clearValidMoves() {
 		//clear board
 		for (int row = 0; row < 9; row++) {
@@ -372,8 +373,10 @@ public class GamePanel extends JPanel {
 		}
 	}
 	
-	//clears all of the piece images from the board
-	public void clearPieces() {
+	/**
+	 * clears all of the piece images from the board
+	 */
+	private void clearPieces() {
 		for (int row = 0; row < 9; row++) {
 			for (int col = 0; col < 9; col++) { 
 				boardGrid[col][row].setIcon(null);
@@ -382,7 +385,10 @@ public class GamePanel extends JPanel {
 		}
 	}
 	
-	//Changes the colors of the board squares to show the selected piece and its available moves
+	/**
+	 * Changes the colors of the board squares to show the selected piece and its available moves
+	 * @param selectedPiece - the piece selected by the user
+	 */
 	public void showValidMoves(Piece selectedPiece) {
 		
 		//change background color of selected piece
@@ -400,6 +406,10 @@ public class GamePanel extends JPanel {
 		
 	}
 	
+	/**
+	 * Changes the color of the board/inventory square behind the selected piece  
+	 * @param selectedPiece - piece selected by the user to be highlighted
+	 */
 	private void highlightPiece(Piece selectedPiece) {
 		
 		if (selectedPiece.isOnBoard()) {
@@ -425,6 +435,9 @@ public class GamePanel extends JPanel {
 		}
 	}
 	
+	/**
+	 * Runs all necessary methods to update all the visuals of the GamePanel
+	 */
 	public void updateGamePanel() {
 		updateBoard();
 		updateInventories();
@@ -432,8 +445,10 @@ public class GamePanel extends JPanel {
 	}
 	
 	
-	
-	public void updateTimersServer() {
+	/**
+	 * Updates the players' timers from the data collected sent by the server and starts the clock of the active player
+	 */
+	private void updateTimersServer() {
 		
 		whiteTime = gd.getPlayer2Time();
 		int seconds = whiteTime % 60;
@@ -468,6 +483,9 @@ public class GamePanel extends JPanel {
 		
 	}
 	
+	/**
+	 * Runs the necessary visual updates to start the game of Shogi
+	 */
 	public void startGame() {
 		//create timer
 		localTimer = new Timer();
@@ -475,7 +493,12 @@ public class GamePanel extends JPanel {
 		updateInventories();
 	}
 
-    public void startLocalTimer(String color, JLabel timerPanel) {
+	/**
+	 * Starts the local timer used to update the graphical display
+	 * @param color - which player's timer needs to be started ("black" or "white")
+	 * @param timerPanel - the timerPanel corresponding to the color passed in
+	 */
+    private void startLocalTimer(String color, JLabel timerPanel) {
     	localTimer = new Timer();
         TimerTask task = new TimerTask() {
             @Override
@@ -499,6 +522,7 @@ public class GamePanel extends JPanel {
                 	timerPanel.setText("0:00");
                     System.out.println("Time's up!");
                     localTimer.cancel();
+                    gc.timeUpForfeit();
                 }
             }
         };
@@ -506,16 +530,18 @@ public class GamePanel extends JPanel {
         localTimer.scheduleAtFixedRate(task, 0, 1000); // Schedule the task to run every 1000ms (1 second)
     }
     
+    /**
+     * Stops the local timer used to update the graphical display
+     */
     public void stopLocalTimer() {
     	localTimer.cancel();
     }
 	
 	
-	
-	
-	
-	
-	public void updateBoard() {
+	/**
+	 * Updates the visual board by placing the images of the pieces in the grid of JPanels
+	 */
+	private void updateBoard() {
 		
 		//get the black player's pieces /\ (up)
 		ArrayList<Piece> blackPieces = gd.getPlayerPieces(PlayerType.BLACK);
@@ -549,7 +575,10 @@ public class GamePanel extends JPanel {
 			
 	}
 	
-	public void updateInventories() {
+	/**
+	 * Updates both players' inventories
+	 */
+	private void updateInventories() {
 		
 		//get the black player's pieces /\ (up)
 		ArrayList<Piece> blackPieces = gd.getPlayerHand(PlayerType.BLACK);
@@ -563,7 +592,11 @@ public class GamePanel extends JPanel {
 		
 	}
 	
-	
+	/**
+	 * Updates the visuals for the inventory panel passed in
+	 * @param visualInventory - inventory panel to update
+	 * @param pieceList - list of pieces that belongs to the same player as the inventory
+	 */
 	private void updateInventory(JLabel[] visualInventory, ArrayList<Piece> pieceList) {
 		
 		//create counting structure
@@ -599,6 +632,11 @@ public class GamePanel extends JPanel {
 		
 	}
 	
+	/**
+	 * Prompts the player to ask if they would like to promote a piece that is eligible
+	 * @param piece - the piece that is eligible for promotion
+	 * @return - result of the user's choice to promote or not
+	 */
 	public int promptPromotion(Piece piece) {
 		
 		//generate the key for the image HashMap
@@ -611,6 +649,11 @@ public class GamePanel extends JPanel {
 		return result;
 	}
 	
+	/**
+	 * Prompts the user to confirm their decision to offer a draw to their opponent or accept a draw from their opponent
+	 * @param direction - String defining whether this player is sending, or receiving a draw offer
+	 * @return - result of the player's decision to draw or not
+	 */
 	public int promptDrawOffer(String direction) {
 		
 		if (direction == "send") {
@@ -626,6 +669,10 @@ public class GamePanel extends JPanel {
 		}
 	}
 	
+	/**
+	 * Prompts the user to confirm their decision to forfeit the match
+	 * @return - result of the user's decision whether to forfeit or not
+	 */
 	public int promptForfeit() {
 				
 		//prompt the user if they want to promote
@@ -634,14 +681,26 @@ public class GamePanel extends JPanel {
 		return result;
 	}
 	
-	public void displayVictory() {
+	/**
+	 * Displays a pop-up displaying the result of the game for this Player.
+	 * @param result - a string of the result for this client ("Win", "Lose", or "Draw")
+	 * @return - return value from the Dialog Pop-up box used to determine when the user dismisses the pop-up
+	 */
+	public int displayEndGame(String result) {
 		
-		JOptionPane.showConfirmDialog(this, "YOU WIN!", "WINNER IS YOU", JOptionPane.PLAIN_MESSAGE, JOptionPane.PLAIN_MESSAGE, null);
-		
-		
-	}
-	
-	public void displayEndGame(String result) {
+		if (result == "Draw") {
+			int confirm = JOptionPane.showConfirmDialog(this, "The game ended in a Draw", "Draw", JOptionPane.PLAIN_MESSAGE, JOptionPane.PLAIN_MESSAGE, null);
+			return confirm;
+		} else if (result == "Win") {
+			int confirm = JOptionPane.showConfirmDialog(this, "YOU WIN!", "WINNER IS YOU", JOptionPane.PLAIN_MESSAGE, JOptionPane.PLAIN_MESSAGE, null);
+			return confirm;
+		} else if (result == "Lose") {
+			int confirm = JOptionPane.showConfirmDialog(this, "YOU LOSE!", "Better luck next time", JOptionPane.PLAIN_MESSAGE, JOptionPane.PLAIN_MESSAGE, null);
+			return confirm;
+		} else {
+			System.out.println("No known end game result was found");
+			return 1;
+		}
 		
 	}
 	
