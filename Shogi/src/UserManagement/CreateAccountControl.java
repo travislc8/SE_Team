@@ -1,6 +1,7 @@
 package UserManagement;
 
 import Client.GameClient;
+import Client.ClientGUI;
 
 import java.awt.*;
 import javax.swing.*;
@@ -76,7 +77,7 @@ public class CreateAccountControl implements ActionListener
   public void createAccountSuccess()
   {
     CreateAccountPanel createAccountPanel = (CreateAccountPanel)container.getComponent(2);
-    GameGUI gameGUI = (GameGUI)SwingUtilities.getWindowAncestor(createAccountPanel);
+    ClientGUI clientGUI = (ClientGUI)SwingUtilities.getWindowAncestor(createAccountPanel);
     CardLayout cardLayout = (CardLayout)container.getLayout();
     cardLayout.show(container, "4");
   }

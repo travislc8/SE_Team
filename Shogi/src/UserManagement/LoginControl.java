@@ -2,6 +2,9 @@ package UserManagement;
 
 import java.awt.*;
 import javax.swing.*;
+
+import Client.GameClient;
+
 import java.awt.event.*;
 import java.io.IOException;
 
