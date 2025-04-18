@@ -188,6 +188,14 @@ public class GameServer extends AbstractServer
 
     	    activeGames.put(clientLobbyId, newGame);
 
+    	    // Sets the player timers
+    	    
+    	    // Also set who is player 1 and player 2
+    	    // Could be through LobbyControl setGameOptions() information
+    	    // sent to the server or I can add a loop control variable
+    	    // to my send to both players where the first one gets sent player
+    	    // i and the second gets sent i++
+    	    
     	    // Broadcast starting game state to both players
     	    for (ConnectionToClient client : getLobbyClients(clientLobbyId)) {
     	    	client.setInfo("gameId", clientLobbyId);
