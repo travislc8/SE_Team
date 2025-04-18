@@ -31,6 +31,8 @@ public class MoveCalculator {
         }
 
         PieceLocation kingLocation = getKingLocation(activePlayer);
+        // set if king is in check
+        gameData.setInCheck(isKingInDanger(kingLocation, opPieces));
 
         if (isKingDiscoverable(kingLocation, opPieces)) {
             for (var piece : gameData.getPlayerPieces(activePlayer)) {

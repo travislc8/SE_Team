@@ -5,6 +5,10 @@ import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Timer;
 
+/**
+ * Holds the necessary data for a game of shogi to be properly displayed in a
+ * gui
+ */
 public class GameData {
     PlayerType player1Type;
     PlayerType player2Type;
@@ -15,6 +19,8 @@ public class GameData {
     ArrayList<Piece> player1Hand;
     ArrayList<Piece> player2Hand;
     boolean gameOver;
+    boolean inCheck;
+    PlayerType winner;
     int player1Time;
     int player2Time;
     int gameId;
@@ -124,6 +130,19 @@ public class GameData {
      * left.
      */
     public void updateEndGame() {
+        // checks if a player is out of time
+        if (player1Time < 0) {
+            winner = getPlayer2Type();
+            gameOver = true;
+            return;
+        }
+
+        if (player2Time < 0) {
+            winner = getPlayer1Type();
+            gameOver = true;
+            return;
+        }
+
         for (var piece : getPlayerPieces(activePlayer)) {
             if (piece.getAvailableMoves().size() > 0) {
                 gameOver = false;
@@ -137,6 +156,25 @@ public class GameData {
             }
         }
         // if all pieces have no moves
+        gameOver = true;
+
+        if (activePlayer == PlayerType.WHITE) {
+            winner = PlayerType.BLACK;
+        } else {
+            winner = PlayerType.WHITE;
+        }
+
+    }
+
+    /**
+     * When called, the active player is set as the loser
+     */
+    public void resign() {
+        if (activePlayer == PlayerType.WHITE) {
+            winner = PlayerType.BLACK;
+        } else {
+            winner = PlayerType.WHITE;
+        }
         gameOver = true;
     }
 
@@ -464,6 +502,18 @@ public class GameData {
         copy.setMoveList(ml);
 
         return copy;
+    }
+
+    public boolean isInCheck() {
+        return inCheck;
+    }
+
+    public void setInCheck(boolean inCheck) {
+        this.inCheck = inCheck;
+    }
+
+    public PlayerType getWinner() {
+        return winner;
     }
 
 }
