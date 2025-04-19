@@ -70,8 +70,12 @@ public class ClientGUI extends JFrame
 
     // JFrame setup
     this.setLayout(new GridBagLayout());
-    this.add(container);
-    this.setSize(600, 400);
+	GridBagConstraints c = new GridBagConstraints();
+	c.fill = GridBagConstraints.BOTH;
+	c.weightx = 1;
+	c.weighty = 1;
+    this.add(container, c);
+    this.setSize(1000, 750);
     this.setVisible(true);
     
   }
