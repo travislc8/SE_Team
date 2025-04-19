@@ -179,7 +179,7 @@ public class GameServer extends AbstractServer
           e.printStackTrace();
         }
       }
-      else if (msg.equals("START_GAME"))
+      else if (msg.startsWith("START_GAME "))
       {
           int clientLobbyId = (int) arg1.getInfo("lobbyId");
 
@@ -213,15 +213,15 @@ public class GameServer extends AbstractServer
           gameData.setGameId(clientLobbyId); // Link lobbyId to game
 
           // Set players
-          User owner = lobbyToStart.getOwner();
-          User opponent = lobbyToStart.getOpponent();
+          //User owner = lobbyToStart.getOwner();
+          //User opponent = lobbyToStart.getOpponent();
 
           // Assuming PlayerType information is provided somehow (either through a separate message or lobby setup)
-          PlayerType player1Type = owner.getPlayerType();  // Retrieve PlayerType for Player 1 (Owner)
-          PlayerType player2Type = opponent.getPlayerType();  // Retrieve PlayerType for Player 2 (Opponent)
+          PlayerType player1Type = PlayerType.BLACK;  // Retrieve PlayerType for Player 1 (Owner)
+          PlayerType player2Type = PlayerType.WHITE;  // Retrieve PlayerType for Player 2 (Opponent)
 
-          newGame.setPlayer1Type(player1Type);  // Set Player 1 Type
-          newGame.setPlayer2Type(player2Type);  // Set Player 2 Type
+          gameData.setPlayer1Type(player1Type);  // Set Player 1 Type
+          gameData.setPlayer2Type(player2Type);  // Set Player 2 Type
 
           // Set initial times for both players
           int gameTime = lobbyToStart.getGameTimerLength();
@@ -236,15 +236,15 @@ public class GameServer extends AbstractServer
           {
               client.setInfo("gameId", clientLobbyId);
 
-              // Notify the client who they are (Player 1 or Player 2)
-              if (client.getInfo("user") == newGame.getGameData().getPlayer1())
-              {
-                  client.setInfo("playerRole", "Player 1");
-              }
-              else
-              {
-                  client.setInfo("playerRole", "Player 2");
-              }
+//              // Notify the client who they are (Player 1 or Player 2)
+//              if (client.getInfo("user") == newGame.getGameData().getPlayer1())
+//              {
+//                  client.setInfo("playerRole", "Player 1");
+//              }
+//              else
+//              {
+//                  client.setInfo("playerRole", "Player 2");
+//              }
 
               try
               {
@@ -332,8 +332,6 @@ public class GameServer extends AbstractServer
                       try
                       {
                           arg1.sendToClient("Both players are ready. Game starting...");
-                          // Broadcast game start
-                          sendStartGameMessage(lobby);
                       }
                       catch (IOException e)
                       {

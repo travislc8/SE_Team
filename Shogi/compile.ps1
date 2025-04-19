@@ -1,4 +1,4 @@
-$path = "src/;lib/hamcrest-core-1.3.jar;lib/junit-4.13.2.jar;lib/mysql-connector-java-5.1.40-bin.jar"
+$path = "src/;lib/mysql-connector-java-5.1.40-bin.jar;lib/ocsf.jar"
 
 $outputPath = "./classes/"
 
@@ -30,6 +30,7 @@ foreach ($folder in Get-ChildItem $outerFolder -Directory) {
 
 }
 
+$path = "src/;lib/hamcrest-core-1.3.jar;lib/junit-4.13.2.jar;lib/mysql-connector-java-5.1.40-bin.jar"
 $folderPath = "./src/ShogiTest/GameLogic/"
 foreach ($file in Get-ChildItem $folderPath -File) {
                 if ($file -like "*.java") {

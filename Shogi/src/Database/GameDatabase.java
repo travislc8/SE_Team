@@ -18,7 +18,7 @@ public class GameDatabase
 	  // open the db.properties with FileInputStream
 	  try
 	  {
-		  fis = new FileInputStream("Database/db.properties");
+		  fis = new FileInputStream("src/Database/db.properties");
 	  }
 	  catch(FileNotFoundException e)
 	  {
