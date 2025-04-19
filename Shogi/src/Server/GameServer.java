@@ -63,6 +63,7 @@ public class GameServer extends AbstractServer
       {
         result = "LoginSuccessful";
         //log.append("Client " + arg1.getId() + " successfully logged in as " + data.getUsername() + "\n");
+        arg1.setInfo("user",new User(data.getUsername(),data.getPassword()));
       }
       else
       {
