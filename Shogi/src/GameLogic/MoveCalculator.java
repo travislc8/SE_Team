@@ -74,9 +74,27 @@ public class MoveCalculator {
         for (var move : getMoves(king)) {
             king.setx(move.getxPos());
             king.sety(move.getyPos());
+            
+
+            //Clears any opponent piece that is on this King move to simulate it being captured
+            Piece opPieceSave = null;
+            for (Piece opPiece : opPieces) {
+            	if (opPiece.getLocation().xyEqual(king.getLocation())) {
+            		opPieceSave = opPiece;
+            		opPieces.remove(opPiece);
+            		break;
+            	}
+            }
+            
             if (!isKingInDanger(new PieceLocation(move), opPieces)) {
                 safeMoves.add(move);
             }
+            
+            //replace the removed piece (simulated king capture) back into the list of opponent pieces
+            if (opPieceSave != null) {
+            	opPieces.add(opPieceSave);
+            }
+            
         }
 
         king.getLocation().setxPos(returnX);

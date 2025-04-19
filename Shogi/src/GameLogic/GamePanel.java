@@ -47,6 +47,7 @@ public class GamePanel extends JPanel {
 	static String BOARD_COLOR = "#A1662F";
 	static String VALID_MOVE_COLOR = "#66EE66";
 	static String SELECTED_PIECE_COLOR = "#006400";
+	static String CHECK_COLOR = "#CC3333";
 	//FONTS
 	private Font timerFont = new Font("Serif", Font.BOLD, 60);
 	private Font inventoryFont = new Font("", Font.BOLD, 20);
@@ -371,6 +372,8 @@ public class GamePanel extends JPanel {
 			whiteInventory[row].setBackground(whiteInventoryPanel.getBackground());
 			blackInventory[row].setBackground(whiteInventoryPanel.getBackground());
 		}
+		
+		if (gd.isInCheck()) displayCheck();
 	}
 	
 	/**
@@ -436,10 +439,31 @@ public class GamePanel extends JPanel {
 	}
 	
 	/**
+	 * Sets the color of the square under the king in check to be the CHECK_COLOR to show the user they are in check
+	 */
+	private void displayCheck() {
+		//loop through the player's pieces to find the king
+		for (Piece piece : gd.getPlayerPieces(gd.getActivePlayer())) {
+			if (piece.getPieceType() == PieceType.KING) {
+				piece.getLocation().getxPos();
+				boardGrid[piece.getLocation().getxPos()][piece.getLocation().getyPos()].setBackground(Color.decode(CHECK_COLOR));
+				//boardGrid[piece.getLocation().getxPos()][piece.getLocation().getyPos()].setBorder(new LineBorder(Color.decode(CHECK_COLOR)));
+				return;
+			}
+		}
+	}
+	
+	
+	/**
 	 * Runs all necessary methods to update all the visuals of the GamePanel
 	 */
 	public void updateGamePanel() {
 		updateBoard();
+		
+		if (gd.isInCheck()) {
+			displayCheck();
+		}
+		
 		updateInventories();
 		updateTimersServer();
 	}
@@ -449,6 +473,8 @@ public class GamePanel extends JPanel {
 	 * Updates the players' timers from the data collected sent by the server and starts the clock of the active player
 	 */
 	private void updateTimersServer() {
+		
+		stopLocalTimer();
 		
 		whiteTime = gd.getPlayer2Time();
 		int seconds = whiteTime % 60;
@@ -534,6 +560,9 @@ public class GamePanel extends JPanel {
      * Stops the local timer used to update the graphical display
      */
     public void stopLocalTimer() {
+    	if (localTimer == null) {
+    		return;
+    	}
     	localTimer.cancel();
     }
 	

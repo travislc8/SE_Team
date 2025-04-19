@@ -370,6 +370,8 @@ public class GameControl implements MouseListener, ActionListener {
 	 */
 	public void displayEndGame() {
 		
+		gp.stopLocalTimer();
+		
 		int confirm;
 		if (!gd.gameOver) {
 			//The game is not Over
@@ -389,6 +391,7 @@ public class GameControl implements MouseListener, ActionListener {
 		if (confirm == 0) {
 			CardLayout layout = (CardLayout) container.getLayout();
 			layout.show(container, "4");
+			
 		}
 		
 	}
