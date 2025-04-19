@@ -96,7 +96,7 @@ public class LobbyControl implements ActionListener {
         }
         inLobby = false;
         currentLobby = null;
-        ((CardLayout) container.getLayout()).show(container, "Browse");
+        ((CardLayout) container.getLayout()).show(container, "BrowseLobby");
     }
 
     public void updateLobby(LobbyData updatedLobby) {
