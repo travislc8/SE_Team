@@ -16,7 +16,7 @@ public class LobbyData {
     private boolean opponentReady = false;
 
     public LobbyData(int lobbyId, Server.User owner, int gameTimerLength, boolean isPublic) {
-        this.lobbyId = Objects.requireNonNull(lobbyId, "lobbyId must not be null");;
+        this.lobbyId = Objects.requireNonNull(lobbyId, "lobbyId must not be null");
         this.owner = Objects.requireNonNull(owner, "owner must not be null");
         this.gameTimerLength = gameTimerLength;
         this.isPublic = isPublic;
