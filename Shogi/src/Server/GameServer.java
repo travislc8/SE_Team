@@ -5,6 +5,7 @@ import java.awt.*;
 import javax.swing.*;
 
 import Database.GameDatabase;
+import GameLogic.PlayerType;
 import UserManagement.CreateAccountData;
 import UserManagement.LoginData;
 import LobbyManagement.BrowseLobbyData;
@@ -178,62 +179,194 @@ public class GameServer extends AbstractServer
           e.printStackTrace();
         }
       }
-      else if (msg.equals("START_GAME")) 
+      else if (msg.equals("START_GAME"))
       {
-    	int clientLobbyId = (int) arg1.getInfo("lobbyId");
+          int clientLobbyId = (int) arg1.getInfo("lobbyId");
 
-    	// Find the lobby from the list
-    	LobbyData lobbyToStart = null;
-    	for (LobbyData lobby : currentLobbies) 
-    	{
-    	  if (lobby.getLobbyId() == clientLobbyId) 
-    	  {
-    	    lobbyToStart = lobby;
-    	    break;
-    	  }
-    	}
+          // Find the lobby from the list
+          LobbyData lobbyToStart = null;
+          for (LobbyData lobby : currentLobbies)
+          {
+              if (lobby.getLobbyId() == clientLobbyId)
+              {
+                  lobbyToStart = lobby;
+                  break;
+              }
+          }
 
-        if (lobbyToStart == null) 
-   	    {
-   	      try 
-   	      {
-   	        arg1.sendToClient(new Error("Lobby not found."));
-   	      } 
-   	      catch (IOException e) 
-   	      {
-   	        e.printStackTrace();
-   	      }
-   	      return;
-   	    }
-        // Create the game and add to activeGames
-        Game newGame = new Game();
-    	newGame.getGameData().setGameId(clientLobbyId); // Link lobbyId to game
+          if (lobbyToStart == null)
+          {
+              try
+              {
+                  arg1.sendToClient(new Error("Lobby not found."));
+              }
+              catch (IOException e)
+              {
+                  e.printStackTrace();
+              }
+              return;
+          }
 
-    	activeGames.put(clientLobbyId, newGame);
+          // Create the game and add it to activeGames
+          Game newGame = new Game();
+          GameData gameData = newGame.getGameData();
+          gameData.setGameId(clientLobbyId); // Link lobbyId to game
 
-    	// Sets the player timers
-    	    
-    	// Also set who is player 1 and player 2
-    	// Could be through LobbyControl setGameOptions() information
-    	// sent to the server or I can add a loop control variable
-    	// to my send to both players where the first one gets sent player
-    	// i and the second gets sent i++
-    	    
-    	// Broadcast starting game state to both players
-    	for (ConnectionToClient client : getLobbyClients(clientLobbyId)) 
-    	{
-    	  client.setInfo("gameId", clientLobbyId);
-    	  try
-    	  {
-    	    client.sendToClient(newGame.getGameData());
-    	  } 
-    	  catch (IOException e) 
-    	  {
-    	    e.printStackTrace();
-    	  }
-    	}
+          // Set players
+          User owner = lobbyToStart.getOwner();
+          User opponent = lobbyToStart.getOpponent();
+
+          // Assuming PlayerType information is provided somehow (either through a separate message or lobby setup)
+          PlayerType player1Type = owner.getPlayerType();  // Retrieve PlayerType for Player 1 (Owner)
+          PlayerType player2Type = opponent.getPlayerType();  // Retrieve PlayerType for Player 2 (Opponent)
+
+          newGame.setPlayer1Type(player1Type);  // Set Player 1 Type
+          newGame.setPlayer2Type(player2Type);  // Set Player 2 Type
+
+          // Set initial times for both players
+          int gameTime = lobbyToStart.getGameTimerLength();
+          gameData.setPlayer1Time(gameTime);
+          gameData.setPlayer2Time(gameTime);
+
+          activeGames.put(clientLobbyId, newGame);
+
+
+          // Broadcast starting game state to both players
+          for (ConnectionToClient client : getLobbyClients(clientLobbyId))
+          {
+              client.setInfo("gameId", clientLobbyId);
+
+              // Notify the client who they are (Player 1 or Player 2)
+              if (client.getInfo("user") == newGame.getGameData().getPlayer1())
+              {
+                  client.setInfo("playerRole", "Player 1");
+              }
+              else
+              {
+                  client.setInfo("playerRole", "Player 2");
+              }
+
+              try
+              {
+                  client.sendToClient(newGame.getGameData());
+              }
+              catch (IOException e)
+              {
+                  e.printStackTrace();
+              }
+          }
       }
-      else if (msg.equals("OFFER_DRAW")) 
+      else if (msg.startsWith("LEAVE_LOBBY "))
+      {
+          int lobbyIdToLeave = Integer.parseInt(msg.split(" ")[1]);
+          User leavingUser = (User) arg1.getInfo("user");
+
+          for (LobbyData lobby : currentLobbies)
+          {
+              if (lobby.getLobbyId() == lobbyIdToLeave)
+              {
+                  // If the leaving user is the owner, remove the lobby or make the opponent the owner
+                  if (lobby.getOwner().equals(leavingUser))
+                  {
+                      // Transfer ownership to opponent or remove the lobby if no opponent
+                      if (lobby.getOpponent() != null)
+                      {
+                          lobby.setOwner(lobby.getOpponent());
+                          lobby.setOpponent(null);
+                      }
+                      else
+                      {
+                          currentLobbies.remove(lobby);
+                      }
+                  }
+                  else if (lobby.getOpponent() != null && lobby.getOpponent().equals(leavingUser))
+                  {
+                      lobby.setOpponent(null);
+                  }
+
+                  // Inform the client they have left the lobby
+                  try
+                  {
+                      arg1.sendToClient("You have left the lobby.");
+                  }
+                  catch (IOException e)
+                  {
+                      e.printStackTrace();
+                  }
+                  return;
+              }
+          }
+
+          // If lobby was not found
+          try
+          {
+              arg1.sendToClient(new Error("Lobby not found."));
+          }
+          catch (IOException e)
+          {
+              e.printStackTrace();
+          }
+      }
+      else if (msg.startsWith("SET_READY "))
+      {
+          int lobbyIdToSetReady = Integer.parseInt(msg.split(" ")[1]);
+          User readyUser = (User) arg1.getInfo("user");
+
+          for (LobbyData lobby : currentLobbies)
+          {
+              if (lobby.getLobbyId() == lobbyIdToSetReady)
+              {
+                  if (lobby.getOwner().equals(readyUser))
+                  {
+                      lobby.setOwnerReady(true);
+                  }
+                  else if (lobby.getOpponent() != null && lobby.getOpponent().equals(readyUser))
+                  {
+                      lobby.setOpponentReady(true);
+                  }
+
+                  // Check if both players are ready
+                  if (lobby.isOwnerReady() && lobby.isOpponentReady())
+                  {
+                      // Start the game
+                      try
+                      {
+                          arg1.sendToClient("Both players are ready. Game starting...");
+                          // Broadcast game start
+                          sendStartGameMessage(lobby);
+                      }
+                      catch (IOException e)
+                      {
+                          e.printStackTrace();
+                      }
+                  }
+                  return;
+              }
+          }
+
+          // If lobby was not found
+          try
+          {
+              arg1.sendToClient(new Error("Lobby not found."));
+          }
+          catch (IOException e)
+          {
+              e.printStackTrace();
+          }
+      }
+      else if (msg.equals("REQUEST_LOBBY_LIST"))
+      {
+          List<LobbyData> lobbyList = currentLobbies;
+          try
+          {
+              arg1.sendToClient(lobbyList); // Send the list of current lobbies
+          }
+          catch (IOException e)
+          {
+              e.printStackTrace();
+          }
+      }
+      else if (msg.equals("OFFER_DRAW"))
       {
     	  int lobbyId = (int) arg1.getInfo("lobbyId");
 

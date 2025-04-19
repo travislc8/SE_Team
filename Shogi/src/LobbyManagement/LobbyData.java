@@ -2,6 +2,8 @@ package LobbyManagement;
 
 import Server.User;
 
+import java.util.Objects;
+
 public class LobbyData {
     private int lobbyId;
     private Server.User owner;
@@ -10,10 +12,12 @@ public class LobbyData {
     private boolean isPublic;
     private int gameTimerLength;
     private boolean start;
+    private boolean ownerReady = false;
+    private boolean opponentReady = false;
 
     public LobbyData(int lobbyId, Server.User owner, int gameTimerLength, boolean isPublic) {
-        this.lobbyId = lobbyId;
-        this.owner = owner;
+        this.lobbyId = Objects.requireNonNull(lobbyId, "lobbyId must not be null");;
+        this.owner = Objects.requireNonNull(owner, "owner must not be null");
         this.gameTimerLength = gameTimerLength;
         this.isPublic = isPublic;
         this.start = false;
@@ -73,5 +77,15 @@ public class LobbyData {
 
     public void setStart(boolean start) {
         this.start = start;
+    }
+
+    public boolean isOwnerReady() { return ownerReady; }
+    public void setOwnerReady(boolean ready) { this.ownerReady = ready; }
+
+    public boolean isOpponentReady() { return opponentReady; }
+    public void setOpponentReady(boolean ready) { this.opponentReady = ready; }
+
+    public boolean isBothPlayersReady() {
+        return ownerReady && opponentReady;
     }
 }
