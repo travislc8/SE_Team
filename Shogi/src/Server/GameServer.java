@@ -355,10 +355,13 @@ public class GameServer extends AbstractServer
       }
       else if (msg.equals("REQUEST_LOBBY_LIST"))
       {
-          List<LobbyData> lobbyList = currentLobbies;
+          ArrayList<LobbyData> lobbyList = new ArrayList<>(currentLobbies);
+          BrowseLobbyData bld = new BrowseLobbyData();
+          bld.setAvailableLobbies(lobbyList);
+          
           try
           {
-              arg1.sendToClient(lobbyList); // Send the list of current lobbies
+              arg1.sendToClient(bld); // Send the list of current lobbies
           }
           catch (IOException e)
           {
