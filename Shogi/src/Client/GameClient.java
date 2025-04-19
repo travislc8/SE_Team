@@ -29,7 +29,7 @@ public class GameClient extends AbstractClient {
 
     public GameClient()
     {
-        super("localhost", 8300);
+        super("localhost", 8400);
     }
 
 
