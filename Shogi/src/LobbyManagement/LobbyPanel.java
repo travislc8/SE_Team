@@ -25,7 +25,7 @@ public class LobbyPanel extends JPanel {
 
         // Load background image
         try {
-            backgroundImage = ImageIO.read(getClass().getResource("/src/LobbyManagement/waitingLobby.png"));
+            backgroundImage = ImageIO.read(getClass().getResource("waitingLobby.png"));
         } catch (IOException | IllegalArgumentException e) {
             System.err.println("Background image failed to load: " + e.getMessage());
             backgroundImage = null;
