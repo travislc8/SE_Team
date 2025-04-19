@@ -42,8 +42,9 @@ public class BrowseLobbyPanel extends JPanel {
         setOpaque(false);
 
         try {
-            URL imageUrl = getClass().getResource("/src/LobbyManagement/creatingLobby.jpg");
-            if (imageUrl != null) backgroundImage = ImageIO.read(imageUrl);
+            URL imageUrl = getClass().getResource("creatingLobby.jpg");
+            if (imageUrl != null)
+                backgroundImage = ImageIO.read(imageUrl);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -53,7 +54,6 @@ public class BrowseLobbyPanel extends JPanel {
         lobbyList = new JList<>(listModel);
         lobbyList.setFont(TITLE_FONT);
         JScrollPane lobbyScrollPane = new JScrollPane(lobbyList);
-
 
         JPanel lobbyButtonPanel = new JPanel();
         JButton joinButton = createStyledButton("Join Lobby", "JoinLobby", listener);
@@ -138,7 +138,8 @@ public class BrowseLobbyPanel extends JPanel {
         gbc2.insets = new Insets(5, 10, 5, 10);
         gbc2.anchor = GridBagConstraints.WEST;
 
-        gbc2.gridx = 0; gbc2.gridy = 0;
+        gbc2.gridx = 0;
+        gbc2.gridy = 0;
         JLabel createPasswordLabel = new JLabel("Password:");
         createPasswordLabel.setFont(TITLE_FONT);
         createPanel.add(createPasswordLabel, gbc2);
@@ -147,7 +148,8 @@ public class BrowseLobbyPanel extends JPanel {
         createPasswordField.setFont(TITLE_FONT);
         createPanel.add(createPasswordField, gbc2);
 
-        gbc2.gridx = 0; gbc2.gridy = 1;
+        gbc2.gridx = 0;
+        gbc2.gridy = 1;
         JLabel timerLabel = new JLabel("Timer (min):");
         timerLabel.setFont(TITLE_FONT);
         createPanel.add(timerLabel, gbc2);
@@ -156,7 +158,8 @@ public class BrowseLobbyPanel extends JPanel {
         timerSpinner.setFont(TITLE_FONT);
         createPanel.add(timerSpinner, gbc2);
 
-        gbc2.gridx = 0; gbc2.gridy = 2;
+        gbc2.gridx = 0;
+        gbc2.gridy = 2;
         JLabel publicLabel = new JLabel("Public Lobby:");
         publicLabel.setFont(TITLE_FONT);
         createPanel.add(publicLabel, gbc2);
@@ -165,7 +168,9 @@ public class BrowseLobbyPanel extends JPanel {
         publicBox.setFont(TITLE_FONT);
         createPanel.add(publicBox, gbc2);
 
-        gbc2.gridx = 0; gbc2.gridy = 3; gbc2.gridwidth = 2;
+        gbc2.gridx = 0;
+        gbc2.gridy = 3;
+        gbc2.gridwidth = 2;
         createConfirmButton = createStyledButton("Create Lobby", "CreateConfirm", listener);
         createPanel.add(createConfirmButton, gbc2);
 
@@ -218,6 +223,7 @@ public class BrowseLobbyPanel extends JPanel {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 button.setBackground(buttonHover);
             }
+
             public void mouseExited(java.awt.event.MouseEvent evt) {
                 button.setBackground(buttonBase);
             }
@@ -234,7 +240,8 @@ public class BrowseLobbyPanel extends JPanel {
 
     public void updateLobbyList(List<LobbyData> lobbies) {
         listModel.clear();
-        for (LobbyData lobby : lobbies) listModel.addElement(lobby);
+        for (LobbyData lobby : lobbies)
+            listModel.addElement(lobby);
     }
 
     public LobbyData getSelectedLobby() {
@@ -265,7 +272,8 @@ public class BrowseLobbyPanel extends JPanel {
 
     public void updateSearchResults(List<LobbyData> results) {
         searchListModel.clear();
-        for (LobbyData lobby : results) searchListModel.addElement(lobby);
+        for (LobbyData lobby : results)
+            searchListModel.addElement(lobby);
     }
 
     public String getCreatePassword() {
