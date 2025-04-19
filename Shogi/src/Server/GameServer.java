@@ -111,7 +111,7 @@ public class GameServer extends AbstractServer
     }
     else if(arg0 instanceof String msg)
     {
-      if(msg.equals("CREATE_LOBBY"))
+      if(msg.startsWith("CREATE_LOBBY "))
       {
         User owner = (User) arg1.getInfo("user");
         int newlobbyId = lobbyId++;
