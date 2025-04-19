@@ -1,7 +1,8 @@
 package LobbyManagement;
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class BrowseLobbyData {
+public class BrowseLobbyData implements Serializable {
     private ArrayList<LobbyData> availableLobbies;
     private LobbyData selectedLobby;
 

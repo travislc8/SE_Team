@@ -2,9 +2,10 @@ package LobbyManagement;
 
 import Server.User;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public class LobbyData {
+public class LobbyData implements Serializable {
     private int lobbyId;
     private Server.User owner;
     private Server.User opponent;
