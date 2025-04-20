@@ -255,7 +255,7 @@ public class GameControl implements MouseListener, ActionListener {
 			
 			//a new game has just started
 			CardLayout layout = (CardLayout) container.getLayout();
-			layout.show(container, "6");
+			layout.show(container, "Game");
 			startGame();
 		} else {
 			
@@ -391,7 +391,7 @@ public class GameControl implements MouseListener, ActionListener {
 		//Send the user back to the lobby
 		if (confirm == 0) {
 			CardLayout layout = (CardLayout) container.getLayout();
-			layout.show(container, "4");
+			layout.show(container, "Lobby");
 			
 		}
 		
