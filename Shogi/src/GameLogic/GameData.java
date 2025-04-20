@@ -25,7 +25,7 @@ public class GameData implements Serializable {
     int player1Time;
     int player2Time;
     int gameId;
-    
+
     PlayerType receivingPlayer;
 
     boolean gameStarted;
@@ -182,6 +182,14 @@ public class GameData implements Serializable {
     }
 
     /**
+     * When called, makes the game a draw
+     */
+    public void draw() {
+        gameOver = true;
+        winner = null;
+    }
+
+    /**
      * Updates the timer for the active player
      */
     public void updateTimer() {
@@ -308,7 +316,7 @@ public class GameData implements Serializable {
     public void setActivePlayer(PlayerType activePlayer) {
         this.activePlayer = activePlayer;
     }
-    
+
     public PlayerType getReceivingPlayer() {
         return receivingPlayer;
     }
