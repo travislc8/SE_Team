@@ -245,14 +245,14 @@ public class GameServer extends AbstractServer
               client.setInfo("gameId", clientLobbyId);
 
               // Set player 1 to Black
-  	          if (client != arg1) 
+  	          if (client == arg1) 
   	          {
   	        	  gameData.setReceivingPlayer(player1Type);
   	          }
-  	          // Send to opponent only
+  	          // Sent player 2 to White
   	          if (client != arg1) 
   	          {
-  	        	  gameData.setReceivingPlayer(player1Type);
+  	        	  gameData.setReceivingPlayer(player2Type);
   	          }
               try
               {
