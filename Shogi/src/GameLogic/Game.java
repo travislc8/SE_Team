@@ -45,15 +45,16 @@ public class Game {
         if (gameFromServer.gameOver == true) {
             // if the game is not already over
             if (gameData.isGameOver() != true) {
-                gameData.resign();
+            	// if draw
+                if (gameFromServer.isGameOver() && gameFromServer.getWinner() == null) {
+                    gameData.draw();
+                } else {
+                    gameData.resign();
+                }
             }
             return gameData;
         }
 
-        // if draw
-        if (gameFromServer.isGameOver() && gameFromServer.getWinner() == null) {
-            gameData.draw();
-        }
 
         // makes the move given by the client
         if (moveAdded(gameFromServer)) {
