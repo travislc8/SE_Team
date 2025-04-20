@@ -1,1 +1,2 @@
-java -cp "src/;lib/ocsf.jar" Client.ClientGUI
+java -cp "bin/;lib/ocsf.jar" Client.ClientGUI 
+pause
