@@ -1,5 +1,6 @@
 #!/bin/bash
 
+cd ../Shogi
 path="src/:lib/mysql-connector-java-5.1.40-bin.jar:lib/ocsf.jar"
 
 extension=".java"
@@ -39,3 +40,4 @@ done
 #javac -cp $path Server/User.java
 
 #java -cp $path Server.ServerTUI
+cd ../batFiles

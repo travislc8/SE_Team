@@ -1,3 +1,4 @@
+cd ../Shogi
 $path = "src/;lib/mysql-connector-java-5.1.40-bin.jar;lib/ocsf.jar"
 
 $outputPath = "./classes/"
@@ -53,3 +54,4 @@ foreach ($file in Get-ChildItem $folderPath -File) {
                     }
                 }
 }
+cd ../batFiles
