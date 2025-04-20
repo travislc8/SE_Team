@@ -218,10 +218,16 @@ public class GameServer extends AbstractServer
           //User owner = lobbyToStart.getOwner();
           //User opponent = lobbyToStart.getOpponent();
 
+         
+          
           // Assuming PlayerType information is provided somehow (either through a separate message or lobby setup)
           PlayerType player1Type = PlayerType.BLACK;  // Retrieve PlayerType for Player 1 (Owner)
           PlayerType player2Type = PlayerType.WHITE;  // Retrieve PlayerType for Player 2 (Opponent)
-
+          
+          
+          	
+          
+          
           gameData.setPlayer1Type(player1Type);  // Set Player 1 Type
           gameData.setPlayer2Type(player2Type);  // Set Player 2 Type
 
@@ -238,16 +244,16 @@ public class GameServer extends AbstractServer
           {
               client.setInfo("gameId", clientLobbyId);
 
-//              // Notify the client who they are (Player 1 or Player 2)
-//              if (client.getInfo("user") == newGame.getGameData().getPlayer1())
-//              {
-//                  client.setInfo("playerRole", "Player 1");
-//              }
-//              else
-//              {
-//                  client.setInfo("playerRole", "Player 2");
-//              }
-
+              // Set player 1 to Black
+  	          if (client != arg1) 
+  	          {
+  	        	  gameData.setReceivingPlayer(player1Type);
+  	          }
+  	          // Send to opponent only
+  	          if (client != arg1) 
+  	          {
+  	        	  gameData.setReceivingPlayer(player1Type);
+  	          }
               try
               {
                   client.sendToClient(newGame.getGameData());
