@@ -321,12 +321,46 @@ public class GameServer extends AbstractServer
                   if (lobby.getOwner().equals(readyUser))
                   {
                       lobby.setOwnerReady(true);
+
+              	    for (ConnectionToClient client : getLobbyClients(lobbyIdToSetReady)) 
+              	    {
+              	        // Send to opponent only
+              	        if (client != arg1) 
+              	        {
+              	            try 
+              	            {
+              	                client.sendToClient(lobby);
+              	            }
+              	            catch (IOException e)
+              	            {
+              	                e.printStackTrace();
+              	            }
+              	        }
+              	    }
+                      
                   }
                   else if (lobby.getOpponent() != null && lobby.getOpponent().equals(readyUser))
                   {
                       lobby.setOpponentReady(true);
+                      
+                      for (ConnectionToClient client : getLobbyClients(lobbyIdToSetReady)) 
+                	    {
+                	        // Send to opponent only
+                	        if (client != arg1) 
+                	        {
+                	            try 
+                	            {
+                	                client.sendToClient(lobby);
+                	            }
+                	            catch (IOException e)
+                	            {
+                	                e.printStackTrace();
+                	            }
+                	        }
+                	    }
                   }
 
+                  
                   // Check if both players are ready
                   if (lobby.isOwnerReady() && lobby.isOpponentReady())
                   {
