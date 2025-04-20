@@ -119,7 +119,7 @@ public class GameServer extends AbstractServer
         LobbyData newLobby = new LobbyData(newlobbyId, owner, 120, true);
         currentLobbies.add(newLobby);
         arg1.setInfo("lobbyId", newlobbyId);
-
+        newLobby.setCurrentUser(owner);
         try 
         {
           arg1.sendToClient(newLobby);
@@ -144,6 +144,7 @@ public class GameServer extends AbstractServer
             {
               lobby.setOpponent(joiningUser);
               arg1.setInfo("lobbyId", joinLobbyId);
+              lobby.setCurrentUser(joiningUser);
               try 
               {
                 arg1.sendToClient(lobby);

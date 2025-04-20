@@ -15,6 +15,7 @@ public class LobbyData implements Serializable {
     private boolean start;
     private boolean ownerReady = false;
     private boolean opponentReady = false;
+    private Server.User currentUser;
 
     public LobbyData(int lobbyId, Server.User owner, int gameTimerLength, boolean isPublic) {
         this.lobbyId = Objects.requireNonNull(lobbyId, "lobbyId must not be null");
@@ -24,6 +25,14 @@ public class LobbyData implements Serializable {
         this.start = false;
     }
 
+    public Server.User getCurrentUser() {
+    	return currentUser;
+    }
+    
+    public void setCurrentUser(Server.User currentUser) {
+    	this.currentUser = currentUser;
+    }
+    
     public int getLobbyId() {
         return lobbyId;
     }

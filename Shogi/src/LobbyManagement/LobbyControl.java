@@ -16,7 +16,16 @@ public class LobbyControl implements ActionListener {
     private LobbyData currentLobby;
     private User currentUser;
     private LobbyPanel lobbyPanel;
+    public boolean hasOpponent;
 
+    public boolean hasOpponent() {
+    	if (currentLobby.getOpponent() != null) {
+    		return true;
+    	} else  {
+    		return false;
+    	}
+    }
+    
     public LobbyControl(GameClient gameClient, JPanel container) {
         this.gameClient = gameClient;
         this.container = container;
@@ -113,6 +122,7 @@ public class LobbyControl implements ActionListener {
 
     public void lobbyCreated(LobbyData data) {
         System.out.println("Lobby created: " + data.getLobbyId());
+        setLobby(data, data.getCurrentUser());
         display();
     }
 

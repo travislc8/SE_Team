@@ -97,6 +97,8 @@ public class GameClient extends AbstractClient {
         // Handles successful lobby creation
         else if (arg0 instanceof LobbyData lobbyData) {
             this.lobbyData = lobbyData;
+            
+            
             lobbyControl.lobbyCreated(lobbyData);
         }
 
