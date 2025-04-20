@@ -1,2 +1,3 @@
-java -cp "../Shogi/bin/;../Shogi/lib/ocsf.jar" Client.ClientGUI 
+cd ../Shogi
+java -cp "bin/;lib/ocsf.jar" Client.ClientGUI 
 pause
