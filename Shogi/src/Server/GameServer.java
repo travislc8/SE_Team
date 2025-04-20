@@ -116,7 +116,8 @@ public class GameServer extends AbstractServer
       {
         User owner = (User) arg1.getInfo("user");
         int newlobbyId = lobbyId++;
-        LobbyData newLobby = new LobbyData(newlobbyId, owner, 120, true);
+        int time = Integer.parseInt(msg.split(" ")[3]) * 60;
+        LobbyData newLobby = new LobbyData(newlobbyId, owner, time, true);
         currentLobbies.add(newLobby);
         arg1.setInfo("lobbyId", newlobbyId);
         newLobby.setCurrentUser(owner);

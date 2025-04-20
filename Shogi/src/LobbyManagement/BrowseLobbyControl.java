@@ -54,7 +54,6 @@ public class BrowseLobbyControl implements ActionListener {
         }
     }
 
-
     public void displayError(String message) {
         JOptionPane.showMessageDialog(container, message, "Error", JOptionPane.ERROR_MESSAGE);
     }
