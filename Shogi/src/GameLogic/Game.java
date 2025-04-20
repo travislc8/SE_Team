@@ -50,6 +50,11 @@ public class Game {
             return gameData;
         }
 
+        // if draw
+        if (gameFromServer.isGameOver() && gameFromServer.getWinner() == null) {
+            gameData.draw();
+        }
+
         // makes the move given by the client
         if (moveAdded(gameFromServer)) {
             if (gameData.makeMove(gameFromServer.getMoveList().getLast())) {
