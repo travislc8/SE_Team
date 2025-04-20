@@ -157,7 +157,6 @@ public class LobbyPanel extends JPanel {
             System.out.println("good");
             opponentLabel.setText("Opponent: " + opponent.getUsername());
         } else {
-            System.out.println("bat");
             opponentLabel.setText("Opponent: Waiting for player...");
         }
         updateSubmitState();

@@ -19,7 +19,7 @@ public class LobbyControl implements ActionListener {
     public boolean hasOpponent;
 
     public boolean hasOpponent() {
-    	if (currentLobby.getOpponent() != null) {
+    	if (currentLobby != null &&  currentLobby.getOpponent() != null) {
     		return true;
     	} else  {
     		return false;
@@ -121,7 +121,6 @@ public class LobbyControl implements ActionListener {
     }
 
     public void lobbyCreated(LobbyData data) {
-        System.out.println("Lobby created: " + data.getLobbyId());
         setLobby(data, data.getCurrentUser());
         display();
     }
