@@ -25,6 +25,8 @@ public class GameData implements Serializable {
     int player1Time;
     int player2Time;
     int gameId;
+    
+    PlayerType receivingPlayer;
 
     boolean gameStarted;
     long lastMoveTime;
@@ -305,6 +307,14 @@ public class GameData implements Serializable {
 
     public void setActivePlayer(PlayerType activePlayer) {
         this.activePlayer = activePlayer;
+    }
+    
+    public PlayerType getReceivingPlayer() {
+        return receivingPlayer;
+    }
+
+    public void setReceivingPlayer(PlayerType receivingPlayer) {
+        this.receivingPlayer = receivingPlayer;
     }
 
     public ArrayList<Piece> getPlayer1Pieces() {

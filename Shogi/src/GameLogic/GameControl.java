@@ -225,6 +225,7 @@ public class GameControl implements MouseListener, ActionListener {
 	 * Starts the game by setting up the GamePanel with correct specifications at the beginning of a match
 	 */
 	public void startGame() {
+		setControlPlayer(gd.getReceivingPlayer());
 		gp.startGame();
 	}
 	
