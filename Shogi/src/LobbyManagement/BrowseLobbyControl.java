@@ -32,6 +32,7 @@ public class BrowseLobbyControl implements ActionListener {
 
     public void createLobby(String password, boolean isPublic, int timer) {
         try {
+            System.out.println("sending lobby");
             gameClient.sendToServer("CREATE_LOBBY " + password + " " + isPublic + " " + timer);
         } catch (IOException e) {
             displayError("Failed to create lobby.");

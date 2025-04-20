@@ -19,13 +19,12 @@ public class LobbyPanel extends JPanel {
     private final LobbyControl control;
     private final AtomicInteger dotCount = new AtomicInteger(0);// For counting dots animation
 
-
     public LobbyPanel(LobbyControl control) {
         this.control = control;
 
         // Load background image
         try {
-            backgroundImage = ImageIO.read(getClass().getResource("/src/LobbyManagement/waitingLobby.png"));
+            backgroundImage = ImageIO.read(getClass().getResource("waitingLobby.png"));
         } catch (IOException | IllegalArgumentException e) {
             System.err.println("Background image failed to load: " + e.getMessage());
             backgroundImage = null;
@@ -33,11 +32,10 @@ public class LobbyPanel extends JPanel {
 
         setLayout(new GridBagLayout());
 
-        //Rounded Content Panel
+        // Rounded Content Panel
         RoundedPanel contentPanel = new RoundedPanel(30, new Color(219, 231, 211, 230));
         contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
         contentPanel.setBorder(new EmptyBorder(30, 50, 30, 50));
-
 
         // Title Label
         JLabel titleLabel = new JLabel("Shogi Lobby", SwingConstants.CENTER);
@@ -45,7 +43,7 @@ public class LobbyPanel extends JPanel {
         titleLabel.setForeground(new Color(45, 45, 45));
         titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         titleLabel.setBorder(new EmptyBorder(0, 0, 20, 0));
-        contentPanel.add(titleLabel);  // Add it without the glue
+        contentPanel.add(titleLabel); // Add it without the glue
 
         // Ensure the content panel uses GridBagLayout for better management
         GridBagConstraints gbc = new GridBagConstraints();
@@ -53,8 +51,7 @@ public class LobbyPanel extends JPanel {
         gbc.gridy = 0;
         gbc.anchor = GridBagConstraints.NORTH;
         gbc.insets = new Insets(40, 0, 0, 0); // Closer to top
-        add(titleLabel, gbc);  // Position titleLabel fixed at the top of the panel
-
+        add(titleLabel, gbc); // Position titleLabel fixed at the top of the panel
 
         // Player Panel
         JPanel playersPanel = new JPanel(new GridLayout(2, 1, 10, 10));
@@ -117,7 +114,6 @@ public class LobbyPanel extends JPanel {
         gbc1.insets = new Insets(40, 0, 0, 0); // Closer to top
         add(contentPanel, gbc1);
 
-
         // Initialize typing animation
         startTypingAnimation();
     }
@@ -155,11 +151,13 @@ public class LobbyPanel extends JPanel {
     }
 
     public void updateLobby(LobbyData lobby) {
-        ownerLabel.setText("Owner: " + lobby.getOwner().toString());
+        ownerLabel.setText("Owner: " + lobby.getOwner().getUsername());
         User opponent = lobby.getOpponent();
         if (opponent != null) {
-            opponentLabel.setText("Opponent: " + opponent.toString());
+            System.out.println("good");
+            opponentLabel.setText("Opponent: " + opponent.getUsername());
         } else {
+            System.out.println("bat");
             opponentLabel.setText("Opponent: Waiting for player...");
         }
         updateSubmitState();
@@ -175,17 +173,19 @@ public class LobbyPanel extends JPanel {
     }
 
     private void updateOpponentLabelWithDots() {
-        int dotCount = this.dotCount.getAndIncrement();
-        String text = "Opponent: Waiting for player" + ".".repeat(dotCount % 4); // Add 0-3 dots
-        opponentLabel.setText(text);
+        if (control != null && !control.hasOpponent()) {
+            int dotCount = this.dotCount.getAndIncrement();
+            String text = "Opponent: Waiting for player" + ".".repeat(dotCount % 4); // Add 0-3 dots
+            opponentLabel.setText(text);
+        }
     }
 
     public void updateReadyStatus(boolean isReady) {
-        readyCheckBox.setSelected(isReady);  // Sync the checkbox with server-side status
-        updateSubmitState();                 // Update Start button state based on readiness
+        readyCheckBox.setSelected(isReady); // Sync the checkbox with server-side status
+        updateSubmitState(); // Update Start button state based on readiness
     }
 
-    //Inner Class: RoundedPanel
+    // Inner Class: RoundedPanel
     private class RoundedPanel extends JPanel {
         private final int cornerRadius;
         private final Color backgroundColor;
