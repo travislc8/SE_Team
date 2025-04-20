@@ -29,6 +29,7 @@ public class GameClient extends AbstractClient {
 
     public GameClient()
     {
+    	// Travis server is 168.231.69.203
         super("localhost", 8400);
     }
 
