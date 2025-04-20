@@ -228,11 +228,11 @@ public class GamePanel extends JPanel {
 		
 		this.add(whiteTimer);
 		size = whiteTimer.getPreferredSize();
-		whiteTimer.setBounds((boardX + boardSize.width) + (BOARD_PADDING), boardY, size.width, size.height);
+		whiteTimer.setBounds((boardX + boardSize.width) + (BOARD_PADDING), boardY, size.width + 10, size.height);
 		
 		this.add(blackTimer);
 		size = blackTimer.getPreferredSize();
-		blackTimer.setBounds(boardX - (size.width + BOARD_PADDING), boardY + (boardSize.height - size.height), size.width, size.height);
+		blackTimer.setBounds(boardX - (size.width + BOARD_PADDING), boardY + (boardSize.height - size.height), size.width + 10, size.height);
 		
 		this.add(forfeitButton);
 		size = forfeitButton.getPreferredSize();
