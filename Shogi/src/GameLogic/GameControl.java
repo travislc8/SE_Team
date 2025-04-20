@@ -178,6 +178,10 @@ public class GameControl implements MouseListener, ActionListener {
 		System.out.println("BUTTON PRESEED");
 		
 		if (command == "Forfeit") {
+			if (controlPlayer != gd.activePlayer) {
+				System.out.println("Cannot forfeit when its not your turn");
+				return;
+			}
 			forfeit();
 		} else if (command == "Offer Draw") {
 			offerDraw();
