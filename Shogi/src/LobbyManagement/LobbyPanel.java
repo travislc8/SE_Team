@@ -95,7 +95,7 @@ public class LobbyPanel extends JPanel {
         JPanel buttonPanel = new JPanel();
         buttonPanel.setOpaque(false);
 
-        submitButton = createStyledButton("Start", "Submit", control);
+        submitButton = createStyledButton("Start", "Start", control);
         submitButton.setEnabled(false);
         JButton leaveButton = createStyledButton("Leave", "Leave", control);
 
