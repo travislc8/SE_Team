@@ -93,6 +93,7 @@ public class GameServer extends AbstractServer
       {
         result = "CreateAccountSuccessful";
         //log.append("Client " + arg1.getId() + " created a new account called " + data.getUsername() + "\n");
+        arg1.setInfo("user",new User(data.getUsername(),data.getPassword()));
       }
       else
       {
