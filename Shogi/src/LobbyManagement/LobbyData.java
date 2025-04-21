@@ -25,6 +25,14 @@ public class LobbyData implements Serializable {
         this.start = false;
     }
 
+    @Override
+    public String toString() {
+        System.out.println("printing");
+        String out = owner.getUsername() + ": " + gameTimerLength +" minutes";
+        return out;
+    }
+
+
     public Server.User getCurrentUser() {
     	return currentUser;
     }
