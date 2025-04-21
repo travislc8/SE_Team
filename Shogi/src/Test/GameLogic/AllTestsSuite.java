@@ -1,10 +1,10 @@
-package ShogiTest.GameLogic;
+package Test.GameLogic;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
-@Suite.SuiteClasses({ ShogiTest.GameLogic.PieceLocationTest.class,
+@Suite.SuiteClasses({ Test.GameLogic.PieceLocationTest.class,
         PieceLocationTest.class,
         PieceLogicTest.class,
         KingLogicTest.class,
