@@ -1,4 +1,4 @@
-package ShogiTest.GameLogic;
+package Test.GameLogic;
 
 import GameLogic.PieceLocation;
 import GameLogic.PlayerType;

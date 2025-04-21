@@ -1,4 +1,4 @@
-package ShogiTest.GameLogic;
+package Test.GameLogic;
 
 import static org.junit.Assert.*;
 import org.junit.*;
