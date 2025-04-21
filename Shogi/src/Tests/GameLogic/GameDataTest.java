@@ -1,4 +1,4 @@
-package Test.GameLogic;
+package Tests.GameLogic;
 
 import static org.junit.Assert.*;
 import org.junit.*;

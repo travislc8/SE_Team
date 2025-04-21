@@ -1,4 +1,4 @@
-package Test.GameLogic;
+package Tests.GameLogic;
 
 import GameLogic.PieceLocation;
 import GameLogic.PlayerType;

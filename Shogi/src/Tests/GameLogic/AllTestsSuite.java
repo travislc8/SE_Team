@@ -1,10 +1,10 @@
-package Test.GameLogic;
+package Tests.GameLogic;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
-@Suite.SuiteClasses({ Test.GameLogic.PieceLocationTest.class,
+@Suite.SuiteClasses({ Tests.GameLogic.PieceLocationTest.class,
         PieceLocationTest.class,
         PieceLogicTest.class,
         KingLogicTest.class,
