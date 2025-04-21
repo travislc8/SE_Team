@@ -13,12 +13,5 @@ public class ServerTUI {
             e.printStackTrace();
         }
 
-        if (server.isRunning()) {
-            System.out.println("listening");
-        } else {
-            System.out.println("failure");
-        }
-
     }
 }
-

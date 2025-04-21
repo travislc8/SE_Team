@@ -498,5 +498,20 @@ public class GameServer extends AbstractServer
 	  }
 	  return result;
   }
+  
+    protected void serverStarted() {
+        System.out.println("Server Started");
+        running = true;
+    }
+
+    protected void serverStopped() {
+        System.out.println("Server Stopped");
+        running = false;
+    }
+
+    protected void clientConnected(ConnectionToClient client) {
+        System.out.println("Client Connected");
+    }
+
 }
 
