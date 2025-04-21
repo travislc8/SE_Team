@@ -515,6 +515,12 @@ public class GamePanel extends JPanel {
 	public void startGame() {
 		//create timer
 		localTimer = new Timer();
+		
+		String minutes = Integer.toString(gd.getPlayer1Time()/60);
+		
+		whiteTimer.setText(minutes + ":00");
+		blackTimer.setText(minutes + ":00");
+		clearEntireBoard();
 		updateBoard();
 		updateInventories();
 	}
