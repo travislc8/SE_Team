@@ -3,11 +3,9 @@
 ----------------------------
 1. PROJECT DOWNLOAD
 ----------------------------
-Download the source code from our GitHub repository:
+Download the source code through the zip file provided. 
 
-GitHub link: https://github.com/travislc8/SE_Team/tree/main 
-
-After downloading or cloning the project, ensure the folder structure is preserved:
+After opening the project in Papyrus, ensure the folder structure is preserved:
 SE_Team/
   └── Shogi/
       ├── src/
