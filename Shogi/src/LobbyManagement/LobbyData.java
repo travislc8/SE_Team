@@ -28,7 +28,7 @@ public class LobbyData implements Serializable {
     @Override
     public String toString() {
         System.out.println("printing");
-        String out = owner.getUsername() + ": " + gameTimerLength +" minutes";
+        String out = owner.getUsername() + ": " + gameTimerLength/60 +" minutes";
         return out;
     }
 
